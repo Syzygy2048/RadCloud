@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,7 +24,7 @@ public class Document {
 
     private int documentId;
     private Resources res;
-    HashMap<Word, Integer> wordcount = new HashMap<>();
+    ArrayList<Word> words = new ArrayList<>();
 
     public Document(int id, Resources res) {
         documentId = id;
@@ -88,13 +89,12 @@ public class Document {
                         }
 
                         if(ok) {
-                            System.out.println("Put it in the map?");
-                            if (wordcount.containsKey(word)) {
-                                System.out.println("Contains");
-                                wordcount.put(new Word(word), wordcount.get(word) + 1);
+                            Word newWord = new Word(word);
+                            boolean containsKey = false;
+                            if (words.contains(newWord)) {
+                                words.get(words.indexOf(newWord)).incrementTF();
                             } else {
-                                System.out.println("new item");
-                                wordcount.put(new Word(word), 1);
+                                words.add(newWord);
                             }
                         }
                     }
@@ -107,7 +107,7 @@ public class Document {
         }
     }
 
-    public HashMap<Word, Integer> getWords() {
-        return wordcount;
+    public ArrayList<Word> getWords() {
+        return words;
     }
 }

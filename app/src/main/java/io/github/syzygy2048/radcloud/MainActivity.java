@@ -141,33 +141,13 @@ public class MainActivity extends AppCompatActivity {
 
         TextView text = findViewById(R.id.text);
 //        text.setText(total);
-
         String count = "";
 
-        TreeMap<Integer, ArrayList<String>> sorted = new TreeMap<>();
-
-        for (Word key : doc1.getWords().keySet()) {
-            ArrayList<String> strings = sorted.get(doc1.getWords().get(key));
-            if (strings != null) {
-                strings.add(key.getTerm());
-            } else {
-                strings = new ArrayList<>();
-                strings.add(key.getTerm());
-            }
-            sorted.put(doc1.getWords().get(key), strings);
-        }
-
-        int i = 0;
-
-        NavigableMap<Integer, ArrayList<String>> navMap = sorted.descendingMap();
-        for (Map.Entry<Integer, ArrayList<String>> entry : navMap.entrySet()) {
-            for (String word : entry.getValue()) {
-                count += word + " - " + entry.getKey() + "\n";
-            }
-
-
-            if (i > 30) {
-                break;
+        for (Document doc : documents) {
+            ArrayList<Word> words = doc.getWords();
+            count += "New Document \n";
+            for (Word w : words) {
+                count += w.getTerm() + " - " + w.getTf() + "\n";
             }
         }
 

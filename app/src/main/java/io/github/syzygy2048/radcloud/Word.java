@@ -17,6 +17,7 @@ public class Word {
 
     public Word(String term) {
         this.term = term;
+        tf = 1;
     }
 
     public String getTerm() {
@@ -38,6 +39,10 @@ public class Word {
 
     public void setItf(float itf) {
         this.itf = itf;
+    }
+
+    public void incrementTF() {
+        tf++;
     }
 
     @Override
