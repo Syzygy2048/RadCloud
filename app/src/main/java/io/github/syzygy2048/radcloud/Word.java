@@ -12,6 +12,8 @@ public class Word {
     HashMap<String, Float> termFrequency = new HashMap<>();
     HashMap<String, Integer> countByDocument = new HashMap<>();
     private float inverseDocumentFeature;
+    private HashMap<String, Float> normalizedWeights;
+    private HashMap<String, Float> intendedPosition;
 
     Word(String term){
         this.term = term;
@@ -48,5 +50,21 @@ public class Word {
     @Override
     public boolean equals(Object obj) {
         return term.equals(((Word)obj).getTerm());
+    }
+
+    public void setNormalizedWeights(HashMap<String, Float> normalizedWeights) {
+        this.normalizedWeights = normalizedWeights;
+    }
+
+    public HashMap<String, Float> getNormalizedWeights() {
+        return normalizedWeights;
+    }
+
+    public void setIntendedPosition(HashMap<String, Float> intendedPosition) {
+        this.intendedPosition = intendedPosition;
+    }
+
+    public HashMap<String, Float> getIntendedPosition() {
+        return intendedPosition;
     }
 }

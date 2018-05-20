@@ -12,6 +12,7 @@ import java.util.HashMap;
 public class DocumentManager {
 
     HashMap<String, Integer> documentList = new HashMap<>();
+    HashMap<String, Vec2> documentVectors = new HashMap<>();
     ArrayList<Word> wordList = new ArrayList<>();
 
     private static DocumentManager instance;
@@ -72,8 +73,14 @@ public class DocumentManager {
     }
 
     public void process() {
+        calculateDocumentVectors();
         calculateTermFrequency();
         calculateInverseDocumentFrequency();
+        calculatePosition();
+    }
+
+    private void calculateDocumentVectors() {
+
     }
 
 
@@ -137,6 +144,48 @@ public class DocumentManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    private void calculatePosition() {
+        for (Word word : wordList) {
+            HashMap<String, Float> normalizedWeights = new HashMap<>();
+            HashMap<String, Float> termFrequency = word.getTermFrequency();
+            for (String document : termFrequency.keySet()) {
+                normalizedWeights.put(document, termFrequency.get(document) / documentList.get(document));
+            }
+
+            HashMap<String, Float> intendedPosition = new HashMap<>();
+
+            float wordTotalWeight = 0;
+            for (String normalizedWeight : normalizedWeights.keySet()) {
+                wordTotalWeight += normalizedWeights.get(normalizedWeight);
+            }
+            for (String document : termFrequency.keySet()) {
+                intendedPosition.put(document, normalizedWeights.get(document) / wordTotalWeight);
+            }
+
+            word.setNormalizedWeights(normalizedWeights);
+            word.setIntendedPosition(intendedPosition);
+        }
+    }
+
+    public class Vec2{
+        float x;
+        float y;
+
+        Vec2(float x, float y){
+            this.x = x;
+            this.y = y;
+        }
+
+        float x(){
+            return x;
+        }
+
+        float y(){
+            return y;
         }
     }
 }
