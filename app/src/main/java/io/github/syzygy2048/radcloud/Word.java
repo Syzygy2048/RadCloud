@@ -9,11 +9,12 @@ import java.util.HashMap;
 public class Word {
 
     private String term;
-    HashMap<String, Float> termFrequency = new HashMap<>();
-    HashMap<String, Integer> countByDocument = new HashMap<>();
+    private HashMap<String, Float> termFrequency = new HashMap<>();
+    private HashMap<String, Integer> countByDocument = new HashMap<>();
     private float inverseDocumentFeature;
     private HashMap<String, Float> normalizedWeights;
-    private HashMap<String, Float> intendedPosition;
+    private HashMap<String, Float> documentWeights;
+    private DocumentManager.Vec2 intendedPosition;
 
     Word(String term){
         this.term = term;
@@ -60,11 +61,19 @@ public class Word {
         return normalizedWeights;
     }
 
-    public void setIntendedPosition(HashMap<String, Float> intendedPosition) {
+    public void setDocumentWeights(HashMap<String, Float> documentWeights) {
+        this.documentWeights = documentWeights;
+    }
+
+    public HashMap<String, Float> getDocumentWeights() {
+        return documentWeights;
+    }
+
+    public void setIntendedPosition(DocumentManager.Vec2 intendedPosition) {
         this.intendedPosition = intendedPosition;
     }
 
-    public HashMap<String, Float> getIntendedPosition() {
+    public DocumentManager.Vec2 getPosition(){
         return intendedPosition;
     }
 }
