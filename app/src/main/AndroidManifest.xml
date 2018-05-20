@@ -20,7 +20,7 @@
             android:name=".RadCloudActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_rad_cloud"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/Theme.Design.NoActionBar"></activity>
     </application>
 
 </manifest>
