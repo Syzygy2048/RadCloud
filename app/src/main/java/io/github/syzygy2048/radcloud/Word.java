@@ -1,8 +1,6 @@
 package io.github.syzygy2048.radcloud;
 
-import android.support.annotation.NonNull;
-
-import java.util.Objects;
+import java.util.HashMap;
 
 /**
  * Created by rebeb on 5/8/2018.
@@ -10,58 +8,45 @@ import java.util.Objects;
 
 public class Word {
 
-
     private String term;
-    private float tf = -1.0f;
-    private float itf = -1.0f;
+    HashMap<String, Float> termFrequency = new HashMap<>();
+    HashMap<String, Integer> countByDocument = new HashMap<>();
+    private float inverseDocumentFeature;
 
-    public Word(String term) {
+    Word(String term){
         this.term = term;
+    }
+
+    void add(String document){
+        if(countByDocument.containsKey(document)){
+            countByDocument.put(document, countByDocument.get(document) + 1);
+        } else {
+            countByDocument.put(document, 1);
+        }
     }
 
     public String getTerm() {
         return term;
     }
 
-    public float getTf() {
-        return tf;
+    public HashMap<String, Float> getTermFrequency(){
+        return termFrequency;
     }
 
-    public float getItf() {
-        return itf;
+    public HashMap<String, Integer> getWordCount(){
+        return countByDocument;
     }
 
-
-    public void setTf(float tf) {
-        this.tf = tf;
+    public void setTermFrequency(HashMap<String, Float> tf){
+        termFrequency = tf;
     }
 
-    public void setItf(float itf) {
-        this.itf = itf;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Word)) {
-            throw new ClassCastException();
-        }
-        Word w = (Word) o;
-        if (w.getTerm().equals(term)) {
-            System.out.println("They are equal");
-            return true;
-        } else {
-            System.out.println("They are not");
-            return false;
-        }
+    public void setInverseDocumentFrequency(float idf) {
+        this.inverseDocumentFeature = idf;
     }
 
     @Override
-    public int hashCode() {
-        System.out.println("Term: " + term + ", hash: " + term.hashCode());
-        return term.hashCode();
-//        int result = 17;
-//        result = 31 * result + term.hashCode();
-
-//        return result;
+    public boolean equals(Object obj) {
+        return term.equals(((Word)obj).getTerm());
     }
 }
