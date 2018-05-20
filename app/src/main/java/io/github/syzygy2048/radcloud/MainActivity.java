@@ -1,18 +1,12 @@
 package io.github.syzygy2048.radcloud;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
-import org.tartarus.snowball.SnowballStemmer;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -34,11 +28,15 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Document> documents = new ArrayList<>();
         System.out.println("Reading the first document");
-        Document doc1 = new Document(R.raw.test, getResources());
+        Document doc1 = new Document();
+        doc1.readDocument(this, R.raw.test);
         documents.add(doc1);
         System.out.println("Reading the second document");
-        Document doc2 = new Document(R.raw.test2, getResources());
+        Document doc2 = new Document();
+        doc2.readDocument(this, R.raw.test2);
         documents.add(doc2);
+
+
 //        InputStream inputStream = getResources().openRawResource(R.raw.wdqk1);
 //
 //        String total = "";
@@ -173,5 +171,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         text.setText(count);
+
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, RadCloudActivity.class));
+            }
+        });
     }
 }
