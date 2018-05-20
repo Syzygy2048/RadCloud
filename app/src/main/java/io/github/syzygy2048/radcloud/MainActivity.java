@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<Word> words = doc.getWords();
             count += "New Document \n";
             for (Word w : words) {
-                count += w.getTerm() + " - " + w.getTf() + "\n";
+                count += w.getTerm() + " - " + w.getWordCount() + "\n";
             }
         }
 

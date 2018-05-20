@@ -12,12 +12,13 @@ public class Word {
 
 
     private String term;
+    private int wordCount = -1;
     private float tf = -1.0f;
-    private float itf = -1.0f;
+    private float idf = -1.0f;
 
     public Word(String term) {
         this.term = term;
-        tf = 1;
+        wordCount = 1;
     }
 
     public String getTerm() {
@@ -28,8 +29,8 @@ public class Word {
         return tf;
     }
 
-    public float getItf() {
-        return itf;
+    public float getIdf() {
+        return idf;
     }
 
 
@@ -37,12 +38,22 @@ public class Word {
         this.tf = tf;
     }
 
-    public void setItf(float itf) {
-        this.itf = itf;
+    public void setIdf(float idf) {
+        this.idf = idf;
     }
 
-    public void incrementTF() {
-        tf++;
+    public int getWordCount() {
+        return wordCount;
+    }
+
+    public void incrementWordCount() {
+        wordCount++;
+    }
+
+    public void calculateWordFreqency(int wordsInDocument) {
+        if (wordsInDocument > 0) {
+            tf = (float) wordCount / (float) wordsInDocument;
+        }
     }
 
     @Override

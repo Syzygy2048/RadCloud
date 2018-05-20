@@ -1,16 +1,12 @@
 package io.github.syzygy2048.radcloud;
 
 import android.content.res.Resources;
-import android.util.Log;
-
-import org.tartarus.snowball.SnowballStemmer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by rebeb on 5/8/2018.
@@ -25,11 +21,15 @@ public class Document {
     private int documentId;
     private Resources res;
     ArrayList<Word> words = new ArrayList<>();
+    int wordCount = 0;
 
     public Document(int id, Resources res) {
         documentId = id;
         this.res = res;
         readDocument();
+        for (Word w: words) {
+            w.calculateWordFreqency(wordCount);
+        }
     }
 
     private void readDocument() {
@@ -90,9 +90,10 @@ public class Document {
 
                         if(ok) {
                             Word newWord = new Word(word);
+                            wordCount++;
                             boolean containsKey = false;
                             if (words.contains(newWord)) {
-                                words.get(words.indexOf(newWord)).incrementTF();
+                                words.get(words.indexOf(newWord)).incrementWordCount();
                             } else {
                                 words.add(newWord);
                             }
