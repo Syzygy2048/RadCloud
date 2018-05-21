@@ -1,6 +1,7 @@
 package io.github.syzygy2048.radcloud;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -82,19 +83,22 @@ public class DocumentManager {
     private void calculateDocumentVectors() {
         float categorySize = 360 / documentList.size();
         float angle = categorySize / 2;
-
-        float documentAngle = 0;
-
         //calculated cos(angle) = dot(vec1, vec2) / (length(vec1) * length(vec2)) for vec2 = (1,0) with known angle
         // cos(angle) = vec1.x * 1 + vec1.y  * 0 / (1 * 1)
         // vec1.x = cos(angle)
         // sqrt(vec1.x^2 + vec1.y^2) = length(vec1)
         // sqrt(vec1.x^2 + vec1.y^2) = 1
         // vec1.y = sqrt(1-vec1.x^2)
-        for (String document : documentList.keySet()) {
-            documentAngle += angle;
-            float x = (float) Math.cos(documentAngle);
+        for(int i = 0; i < documentList.size(); i++){
+            String document = documentList.keySet().toArray(new String[0])[i];
+            float x = (float) Math.cos(categorySize * i + angle);
             float y = (float) Math.sqrt(1 - x * x);
+            Log.d("docdirection", document + " " + categorySize * i + angle + " " + x + ", " + y);
+
+            if (categorySize * i + angle > 180) {
+                y = -y;
+            }
+            Log.d("docdirection", document + " " + categorySize * i + angle + " " + x + ", " + y);
             documentVectors.put(document, new Vec2(x, y));
         }
     }
@@ -192,8 +196,17 @@ public class DocumentManager {
                 intendedPos.x += weight * documentVector.x;
                 intendedPos.y += weight * documentVector.y;
             }
+            Log.d("bla", word.getTerm() + " " + intendedPos.x + ", " + intendedPos.y);
             word.setIntendedPosition(intendedPos);
         }
+    }
+
+    public HashMap<String, Integer> getDocumentList() {
+        return documentList;
+    }
+
+    public ArrayList<Word> getWordList() {
+        return wordList;
     }
 
     public class Vec2 {

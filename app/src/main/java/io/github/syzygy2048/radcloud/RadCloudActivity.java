@@ -56,11 +56,11 @@ public class RadCloudActivity extends AppCompatActivity {
 
 
         DocumentManager dm = DocumentManager.getInstance();
-        int docCount = dm.documentList.keySet().size();
+        int docCount = dm.getDocumentList().keySet().size();
         int stepDegree = 360 / docCount;
         int startDegree = 0;
         int count = 0;
-        for (String name : dm.documentList.keySet()) {
+        for (String name : dm.getDocumentList().keySet()) {
             Path mainTextPath = new Path();
             //TODO: allign text on center
             if (count > ((docCount / 2 )- 1)) {
@@ -83,7 +83,7 @@ public class RadCloudActivity extends AppCompatActivity {
 
         startDegree = 0;
         count = 0;
-        for (String name : dm.documentList.keySet()) {
+        for (String name : dm.getDocumentList().keySet()) {
             Path smallTextPath = new Path();
             if (count > ((docCount / 2 )- 1)) {
                 smallTextPath.addArc(200, 200, 2360, 1240, startDegree + (stepDegree/3), stepDegree);
@@ -97,6 +97,13 @@ public class RadCloudActivity extends AppCompatActivity {
             canvas.drawTextOnPath(name, smallTextPath, 0, 0, smallTextPaint);
             startDegree += stepDegree;
             count++;
+        }
+
+        ovalPaint.setStrokeWidth(1);
+        ovalPaint.setColor(Color.BLACK);
+        for (Word word : dm.getWordList()) {
+            canvas.drawLine(1280, 770, 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, ovalPaint);
+            canvas.drawText(word.getTerm(), 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, mainTextPaint);
         }
 
         radCloudView.setImageBitmap(bm);
