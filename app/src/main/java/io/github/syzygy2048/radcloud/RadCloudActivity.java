@@ -59,11 +59,23 @@ public class RadCloudActivity extends AppCompatActivity {
         int docCount = dm.getDocumentList().keySet().size();
         int stepDegree = 360 / docCount;
         int startDegree = 0;
-        int count = 0;
-        for (String name : dm.getDocumentList().keySet()) {
+        ArrayList<String> tmpDocuments = new ArrayList<>(dm.getDocumentList().keySet());
+        ArrayList<String> documents = new ArrayList<>();
+        int categoryTh = (tmpDocuments.size() / 2 )- 1;
+        for (int i = 0; i < tmpDocuments.size(); i++) {
+            System.out.println("Reihenfolge Original" +
+                    ": " + tmpDocuments.get(i));
+            if (i > categoryTh) {
+                documents.add(tmpDocuments.get(i));
+            } else {
+                documents.add(tmpDocuments.get(categoryTh - i));
+            }
+        }
+        for (int i = 0; i < documents.size(); i++) {
+//        for (String name : dm.getDocumentList().keySet()) {
             Path mainTextPath = new Path();
             //TODO: allign text on center
-            if (count > ((docCount / 2 )- 1)) {
+            if (i > categoryTh) {
                     mainTextPath.addArc(100, 100, 2460, 1340, startDegree + (stepDegree / 3), stepDegree);
             } else {
                 if (docCount % 2 == 0) {
@@ -72,20 +84,20 @@ public class RadCloudActivity extends AppCompatActivity {
                     mainTextPath.addArc(100, 100, 2460, 1340, ((180 - (stepDegree/2)) - (startDegree) - (stepDegree / 3)), -stepDegree);
                 }
             }
-            canvas.drawTextOnPath(name, mainTextPath, 0, 0, mainTextPaint);
-            ovalPaint.setColor(colors.get(count));
+            canvas.drawTextOnPath(documents.get(i), mainTextPath, 0, 0, mainTextPaint);
+            ovalPaint.setColor(colors.get(i));
             canvas.drawArc(200, 200, 2360, 1240, startDegree, stepDegree, false, ovalPaint);
 
             startDegree += stepDegree;
-            count++;
         }
 
 
         startDegree = 0;
-        count = 0;
-        for (String name : dm.getDocumentList().keySet()) {
+        for (int i = 0; i < documents.size(); i++) {
+//        for (String name : dm.getDocumentList().keySet()) {
+            System.out.println("Reihenfolge: " + documents.get(i));
             Path smallTextPath = new Path();
-            if (count > ((docCount / 2 )- 1)) {
+            if (i > categoryTh) {
                 smallTextPath.addArc(200, 200, 2360, 1240, startDegree + (stepDegree/3), stepDegree);
             } else {
                 if (docCount % 2 == 0) {
@@ -94,9 +106,9 @@ public class RadCloudActivity extends AppCompatActivity {
                     smallTextPath.addArc(200, 200, 2360, 1240, ((180 - (stepDegree/2)) - (startDegree) - (stepDegree / 3)), -stepDegree);
                 }
             }
-            canvas.drawTextOnPath(name, smallTextPath, 0, 0, smallTextPaint);
+            canvas.drawTextOnPath(documents.get(i), smallTextPath, 0, 0, smallTextPaint);
             startDegree += stepDegree;
-            count++;
+
         }
 
         ovalPaint.setStrokeWidth(1);

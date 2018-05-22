@@ -11,8 +11,10 @@ public class Word {
     private String term;
     private HashMap<String, Float> termFrequency = new HashMap<>();
     private HashMap<String, Integer> countByDocument = new HashMap<>();
-    private float inverseDocumentFeature;
+    private float inverseDocumentFrequency;
     private HashMap<String, Float> normalizedWeights;
+    private HashMap<String, Float> categoryWeights;
+    private HashMap<String, Float> placementWeights;
     private HashMap<String, Float> documentWeights;
     private DocumentManager.Vec2 intendedPosition;
 
@@ -26,6 +28,22 @@ public class Word {
         } else {
             countByDocument.put(document, 1);
         }
+    }
+
+    public HashMap<String, Float> getCategoryWeights() {
+        return categoryWeights;
+    }
+
+    public void setCategoryWeights(HashMap<String, Float> categoryWeights) {
+        this.categoryWeights = categoryWeights;
+    }
+
+    public HashMap<String, Float> getPlacementWeights() {
+        return placementWeights;
+    }
+
+    public void setPlacementWeights(HashMap<String, Float> placementWeights) {
+        this.placementWeights = placementWeights;
     }
 
     public String getTerm() {
@@ -45,8 +63,10 @@ public class Word {
     }
 
     public void setInverseDocumentFrequency(float idf) {
-        this.inverseDocumentFeature = idf;
+        this.inverseDocumentFrequency = idf;
     }
+
+    public float getInverseDocumentFrequency() { return inverseDocumentFrequency; }
 
     @Override
     public boolean equals(Object obj) {

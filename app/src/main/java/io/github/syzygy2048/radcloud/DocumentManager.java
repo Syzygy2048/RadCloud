@@ -69,7 +69,8 @@ public class DocumentManager {
     private void calculateInverseDocumentFrequency() {
         for (Word word : wordList) {
             HashMap<String, Integer> wordCount = word.getWordCount();
-            word.setInverseDocumentFrequency(wordCount.size() / ((float) documentList.size()));
+            word.setInverseDocumentFrequency((float) Math.log(( (double) documentList.size()) / ((double) wordCount.size()) ));
+            System.out.println("Inverse Document Frequency for " + word.getTerm() + " is: " + word.getInverseDocumentFrequency());
         }
     }
 
@@ -90,15 +91,17 @@ public class DocumentManager {
         // sqrt(vec1.x^2 + vec1.y^2) = 1
         // vec1.y = sqrt(1-vec1.x^2)
         for(int i = 0; i < documentList.size(); i++){
+            float currentAngle = categorySize * i + angle;
             String document = documentList.keySet().toArray(new String[0])[i];
-            float x = (float) Math.cos(categorySize * i + angle);
+            float x = (float) Math.cos(Math.toRadians(currentAngle));
             float y = (float) Math.sqrt(1 - x * x);
-            Log.d("docdirection", document + " " + categorySize * i + angle + " " + x + ", " + y);
+
 
             if (categorySize * i + angle > 180) {
                 y = -y;
             }
-            Log.d("docdirection", document + " " + categorySize * i + angle + " " + x + ", " + y);
+            Log.d("docdirection", document + " " + currentAngle + " " + x + ", " + y);
+
             documentVectors.put(document, new Vec2(x, y));
         }
     }
@@ -170,35 +173,78 @@ public class DocumentManager {
 
     private void calculatePosition() {
         for (Word word : wordList) {
-            HashMap<String, Float> normalizedWeights = new HashMap<>();
+            HashMap<String, Float> categoryWeights = new HashMap<>();
             HashMap<String, Float> termFrequency = word.getTermFrequency();
             for (String document : termFrequency.keySet()) {
-                normalizedWeights.put(document, termFrequency.get(document) / documentList.get(document));
+                categoryWeights.put(document, (termFrequency.get(document) *  word.getInverseDocumentFrequency()));
             }
-
-            HashMap<String, Float> documentWeights = new HashMap<>();
-
-            float wordTotalWeight = 0;
-            for (String normalizedWeight : normalizedWeights.keySet()) {
-                wordTotalWeight += normalizedWeights.get(normalizedWeight);
+            word.setCategoryWeights(categoryWeights);
+        }
+        for (Word currentWord : wordList) {
+            HashMap<String, Float> normalizedWeights = new HashMap<>();
+            for (String document : documentList.keySet()) {
+                float otherWordWeights = 0;
+                for (Word otherWord : wordList) {
+                    otherWordWeights += otherWord.getCategoryWeights().get(document);
+                }
+                normalizedWeights.put(document, currentWord.getCategoryWeights().get(document) / otherWordWeights);
             }
-            for (String document : termFrequency.keySet()) {
-                documentWeights.put(document, normalizedWeights.get(document) / wordTotalWeight);
+            currentWord.setNormalizedWeights(normalizedWeights);
+        }
+        for (Word word: wordList) {
+            HashMap<String, Float> normalizedWeights = word.getNormalizedWeights();
+            HashMap<String, Float> positionWeights = new HashMap<>();
+            float sumNormalizedWeights = 0;
+            for (String document : normalizedWeights.keySet()) {
+                sumNormalizedWeights += normalizedWeights.get(document);
             }
-
-            word.setNormalizedWeights(normalizedWeights);
-            word.setDocumentWeights(documentWeights);
-
+            for (String document : normalizedWeights.keySet()) {
+                positionWeights.put(document, (normalizedWeights.get(document) / sumNormalizedWeights));
+            }
+            word.setPlacementWeights(positionWeights);
+        }
+        for (Word word : wordList) {
             Vec2 intendedPos = new Vec2(0,0);
-            for (String document : documentWeights.keySet()) {
-                Vec2 documentVector = documentVectors.get(document);
-                float weight = documentWeights.get(document);
-                intendedPos.x += weight * documentVector.x;
-                intendedPos.y += weight * documentVector.y;
+            HashMap<String, Float> positionWeights = word.getPlacementWeights();
+            for (String document : positionWeights.keySet()) {
+                intendedPos.x += documentVectors.get(document).x * positionWeights.get(document);
+                intendedPos.y += documentVectors.get(document).y * positionWeights.get(document);
             }
-            Log.d("bla", word.getTerm() + " " + intendedPos.x + ", " + intendedPos.y);
             word.setIntendedPosition(intendedPos);
         }
+
+
+//        for (Word word : wordList) {
+//            HashMap<String, Float> normalizedWeights = new HashMap<>();
+//            HashMap<String, Float> categoryWeights = new HashMap<>();
+//            HashMap<String, Float> termFrequency = word.getTermFrequency();
+//            for (String document : termFrequency.keySet()) {
+//                categoryWeights.put(document, (termFrequency.get(document) *  word.getInverseDocumentFrequency()) / documentList.get(document));
+//            }
+//
+//            HashMap<String, Float> documentWeights = new HashMap<>();
+//
+//            float wordTotalWeight = 0;
+//            for (String normalizedWeight : normalizedWeights.keySet()) {
+//                wordTotalWeight += normalizedWeights.get(normalizedWeight);
+//            }
+//            for (String document : termFrequency.keySet()) {
+//                documentWeights.put(document, normalizedWeights.get(document) / wordTotalWeight);
+//            }
+//
+//            word.setNormalizedWeights(normalizedWeights);
+//            word.setDocumentWeights(documentWeights);
+//
+//            Vec2 intendedPos = new Vec2(0,0);
+//            for (String document : documentWeights.keySet()) {
+//                Vec2 documentVector = documentVectors.get(document);
+//                float weight = documentWeights.get(document);
+//                intendedPos.x += weight * documentVector.x;
+//                intendedPos.y += weight * documentVector.y;
+//            }
+//            Log.d("bla", word.getTerm() + " " + intendedPos.x + ", " + intendedPos.y);
+//            word.setIntendedPosition(intendedPos);
+//        }
     }
 
     public HashMap<String, Integer> getDocumentList() {
