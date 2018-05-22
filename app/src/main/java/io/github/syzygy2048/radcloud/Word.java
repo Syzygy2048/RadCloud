@@ -17,6 +17,7 @@ public class Word {
     private HashMap<String, Float> placementWeights;
     private HashMap<String, Float> documentWeights;
     private DocumentManager.Vec2 intendedPosition;
+    private float maximumRelevance;
 
     Word(String term){
         this.term = term;
@@ -28,6 +29,14 @@ public class Word {
         } else {
             countByDocument.put(document, 1);
         }
+    }
+
+    public float getMaximumRelevance() {
+        return maximumRelevance;
+    }
+
+    public void setMaximumRelevance(float maximumRelevance) {
+        this.maximumRelevance = maximumRelevance;
     }
 
     public HashMap<String, Float> getCategoryWeights() {

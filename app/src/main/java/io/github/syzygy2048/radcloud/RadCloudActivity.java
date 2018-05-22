@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -28,12 +29,13 @@ public class RadCloudActivity extends AppCompatActivity {
 
         radCloudView = (ImageView) findViewById(R.id.radCloud);
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.argb(255, 102, 102, 255));
-        colors.add(Color.CYAN);
-        colors.add(Color.GREEN);
-        colors.add(Color.MAGENTA);
-        colors.add(Color.RED);
-        colors.add(Color.YELLOW);
+        HashMap<String, Integer> categoryColorCodes = new HashMap<>();
+        colors.add(Color.argb(255, 0, 0, 255));
+        colors.add(Color.argb(255, 0, 255, 0));
+        colors.add(Color.argb(255, 255, 0, 0));
+        colors.add(Color.argb(255, 255, 0, 255));
+        colors.add(Color.argb(255, 0, 255, 255));
+        colors.add(Color.argb(255, 255, 255, 0));
 
 
         Bitmap bm = Bitmap.createBitmap(2560, 1440, Bitmap.Config.ARGB_8888);
@@ -43,10 +45,10 @@ public class RadCloudActivity extends AppCompatActivity {
         ovalPaint.setStyle(Paint.Style.STROKE);
         ovalPaint.setStrokeWidth(50);
 
-        Paint mainTextPaint = new Paint();
-        mainTextPaint.setColor(Color.BLACK);
-        mainTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mainTextPaint.setTextSize(50);
+        Paint categoryTextPaint = new Paint();
+        categoryTextPaint.setColor(Color.BLACK);
+        categoryTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        categoryTextPaint.setTextSize(50);
 
         Paint smallTextPaint = new Paint();
         smallTextPaint.setColor(Color.BLACK);
@@ -67,12 +69,15 @@ public class RadCloudActivity extends AppCompatActivity {
                     ": " + tmpDocuments.get(i));
             if (i > categoryTh) {
                 documents.add(tmpDocuments.get(i));
+                categoryColorCodes.put(tmpDocuments.get(i), colors.get(i));
             } else {
                 documents.add(tmpDocuments.get(categoryTh - i));
+                categoryColorCodes.put(tmpDocuments.get(categoryTh - i), colors.get(categoryTh - i));
             }
         }
         for (int i = 0; i < documents.size(); i++) {
 //        for (String name : dm.getDocumentList().keySet()) {
+
             Path mainTextPath = new Path();
             //TODO: allign text on center
             if (i > categoryTh) {
@@ -84,8 +89,9 @@ public class RadCloudActivity extends AppCompatActivity {
                     mainTextPath.addArc(100, 100, 2460, 1340, ((180 - (stepDegree/2)) - (startDegree) - (stepDegree / 3)), -stepDegree);
                 }
             }
-            canvas.drawTextOnPath(documents.get(i), mainTextPath, 0, 0, mainTextPaint);
+            canvas.drawTextOnPath(documents.get(i), mainTextPath, 0, 0, categoryTextPaint);
             ovalPaint.setColor(colors.get(i));
+
             canvas.drawArc(200, 200, 2360, 1240, startDegree, stepDegree, false, ovalPaint);
 
             startDegree += stepDegree;
@@ -111,11 +117,48 @@ public class RadCloudActivity extends AppCompatActivity {
 
         }
 
+        float maximumWordRelevance = dm.getMaximumWordRelevance();
+        final int maximumTextSize = 100;
+
         ovalPaint.setStrokeWidth(1);
         ovalPaint.setColor(Color.BLACK);
+
+        Paint textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
         for (Word word : dm.getWordList()) {
             canvas.drawLine(1280, 770, 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, ovalPaint);
-            canvas.drawText(word.getTerm(), 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, mainTextPaint);
+            textPaint.setTextSize(maximumTextSize * (word.getMaximumRelevance() / maximumWordRelevance));
+            Integer textColor = Color.argb( 255, 0, 0, 0);
+            HashMap<String, Float> weights = word.getPlacementWeights();
+            for (String document : weights.keySet()) {
+                int r =Math.round( (float) Color.red(categoryColorCodes.get(document)) * weights.get(document));
+                int g = Math.round( (float) Color.green(categoryColorCodes.get(document)) * weights.get(document));
+                int b = Math.round( (float) Color.blue(categoryColorCodes.get(document)) * weights.get(document));
+
+
+                int oldR = Color.red(textColor);
+                int oldG = Color.green(textColor);
+                int oldB = Color.blue(textColor);
+
+                int newR = r + oldR;
+                if (newR > 255) {
+                    newR = 255;
+                }
+                int newG = g + oldG;
+                if (newG > 255) {
+                    newG = 255;
+                }
+                int newB = b + oldB;
+                if (newB > 255) {
+                    newB = 255;
+                }
+                textColor = Color.argb(255, newR, newG, newB);
+            }
+            System.out.println(word.getTerm() + ": " + Color.red(textColor) + " " + Color.green(textColor) + " " + Color.blue(textColor) + " " );
+            textPaint.setColor(textColor);
+            canvas.drawText(word.getTerm(), 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, textPaint);
         }
 
         radCloudView.setImageBitmap(bm);

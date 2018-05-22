@@ -24,6 +24,8 @@ public class DocumentManager {
     private DocumentManager() {
     }
 
+    private float maximumWordRelevance = -1;
+
     public static DocumentManager getInstance() {
         if (instance == null) {
             instance = new DocumentManager();
@@ -172,13 +174,24 @@ public class DocumentManager {
 
 
     private void calculatePosition() {
+        /* The font size of each word encodes the maximum relevance
+        value for the word in all categories*/
         for (Word word : wordList) {
+            float maximumCategoryWeight = -1;
             HashMap<String, Float> categoryWeights = new HashMap<>();
             HashMap<String, Float> termFrequency = word.getTermFrequency();
             for (String document : termFrequency.keySet()) {
-                categoryWeights.put(document, (termFrequency.get(document) *  word.getInverseDocumentFrequency()));
+                float weight = termFrequency.get(document) *  word.getInverseDocumentFrequency();
+                categoryWeights.put(document, weight);
+                if (weight > maximumCategoryWeight) {
+                    maximumCategoryWeight = weight;
+                }
+                if (weight > maximumWordRelevance) {
+                    maximumWordRelevance = weight;
+                }
             }
             word.setCategoryWeights(categoryWeights);
+            word.setMaximumRelevance(maximumCategoryWeight);
         }
         for (Word currentWord : wordList) {
             HashMap<String, Float> normalizedWeights = new HashMap<>();
@@ -264,5 +277,7 @@ public class DocumentManager {
             this.y = y;
         }
     }
+
+    float getMaximumWordRelevance() { return maximumWordRelevance; }
 }
 
