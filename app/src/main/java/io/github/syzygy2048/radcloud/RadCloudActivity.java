@@ -127,9 +127,18 @@ public class RadCloudActivity extends AppCompatActivity {
         textPaint.setColor(Color.BLACK);
         textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
+        Paint barChartPaint = new Paint();
+        barChartPaint.setStrokeWidth(5);
+        float textWidth;
+
         for (Word word : dm.getWordList()) {
+            float maximumRelevance = word.getMaximumRelevance();
             canvas.drawLine(1280, 770, 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, ovalPaint);
-            textPaint.setTextSize(maximumTextSize * (word.getMaximumRelevance() / maximumWordRelevance));
+            float textSize = maximumTextSize * (maximumRelevance / maximumWordRelevance);
+            if (textSize < 5.0) {
+                textSize = 5;
+            }
+            textPaint.setTextSize(textSize);
             Integer textColor = Color.argb( 255, 0, 0, 0);
             HashMap<String, Float> weights = word.getPlacementWeights();
             for (String document : weights.keySet()) {
@@ -156,9 +165,25 @@ public class RadCloudActivity extends AppCompatActivity {
                 }
                 textColor = Color.argb(255, newR, newG, newB);
             }
-            System.out.println(word.getTerm() + ": " + Color.red(textColor) + " " + Color.green(textColor) + " " + Color.blue(textColor) + " " );
+            if (textColor == Color.WHITE) {
+                textColor = Color.BLACK;
+            }
             textPaint.setColor(textColor);
+            //TODO: eliminate magic numbers, also pay attention for barchart
             canvas.drawText(word.getTerm(), 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, textPaint);
+            textWidth = textPaint.measureText(word.getTerm());
+            //TODO: is this the right relevance measure?
+            HashMap<String, Float> relevance = word.getPlacementWeights();
+            float barchartX = 1280 + 640 * word.getPosition().x;
+            float barchartY = 770 +  385 * word.getPosition().y +5; //offset
+            for (String doc : relevance.keySet()) {
+                //canvas.drawLine(1280, 770, 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, ovalPaint);
+                System.out.println("Word: " + word.getTerm() + " Doc: " + doc + " textWidth: " + textWidth + " category weight: " + word.getCategoryWeights().get(doc) + " relevance: " + maximumRelevance);
+                float barWidth = textWidth * relevance.get(doc);
+                barChartPaint.setColor(categoryColorCodes.get(doc));
+                canvas.drawLine(barchartX, barchartY, (barchartX + barWidth), barchartY, barChartPaint);
+                barchartX += barWidth;
+            }
         }
 
         radCloudView.setImageBitmap(bm);

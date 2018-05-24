@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         dm.readDocument(this, R.raw.test2, "second document");
         dm.readDocument(this, R.raw.test3, "Harry Potter");
         dm.readDocument(this, R.raw.test4, "Fifty Shades");
-//        dm.readDocument(this, R.raw.test5, "fifth document");
+        dm.readDocument(this, R.raw.test5, "fifth document");
         dm.process();
 
         TextView text = findViewById(R.id.text);
