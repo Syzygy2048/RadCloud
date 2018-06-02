@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -174,22 +173,22 @@ public class RadCloudActivity extends AppCompatActivity {
             //TODO: eliminate magic numbers, also pay attention for barchart
             textWidth = textPaint.measureText(word.getTerm());
             canvas.drawText(word.getTerm(), word.getPosition().x - textWidth / 2, word.getPosition().y + textSize / 2, textPaint);
-            Random rnd = new Random();
-            textPaint.setColor(Color.argb(50, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
-            canvas.drawRect(word.getPosition().boundingBox, textPaint);
+//            Random rnd = new Random();
+//            textPaint.setColor(Color.argb(100, rnd.nextInt(100), rnd.nextInt(100), rnd.nextInt(100)));
+//            canvas.drawRect(word.getPosition().boundingBox, textPaint);
 
 
             //TODO: is this the right relevance measure?
             HashMap<String, Float> relevance = word.getPlacementWeights();
             float barchartX = word.getPosition().x - textWidth / 2;
             float barchartY = word.getPosition().y + 5 + textSize / 2; //offset
-            barChartPaint.setStrokeWidth(textSize/3);
+            barChartPaint.setStrokeWidth(5);
             for (String doc : relevance.keySet()) {
                 //canvas.drawLine(1280, 770, 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, ovalPaint);
                 System.out.println("Word: " + word.getTerm() + " Doc: " + doc + " textWidth: " + textWidth + " category weight: " + word.getCategoryWeights().get(doc) + " relevance: " + maximumRelevance);
                 float barWidth = textWidth * relevance.get(doc);
                 barChartPaint.setColor(categoryColorCodes.get(doc));
-//                canvas.drawLine(barchartX, barchartY, (barchartX + barWidth), barchartY, barChartPaint);
+                canvas.drawLine(barchartX, barchartY, (barchartX + barWidth), barchartY, barChartPaint);
                 barchartX += barWidth;
             }
         }

@@ -412,7 +412,8 @@ public class DocumentManager {
 
     private boolean checkForOverlap(List<Word> placedWords, Word word) {
         for (Word placedWord : placedWords) {
-            if (overlaps(word.getPosition().boundingBox, placedWord.getPosition().boundingBox)) {
+            if (overlaps(word.getPosition().boundingBox, placedWord.getPosition().boundingBox)
+                    || overlaps(placedWord.getPosition().boundingBox, word.getPosition().boundingBox)) {
                 return true;
             }
         }
@@ -505,8 +506,22 @@ public class DocumentManager {
     }
 
     private boolean overlaps(Rect bb1, Rect bb2) {
+        ArrayList<Vec2> points = new ArrayList<>();
+        points.add(new Vec2(bb2.left, bb2.top));
+        points.add(new Vec2(bb2.left, bb2.bottom));
+        points.add(new Vec2(bb2.right, bb2.top));
+        points.add(new Vec2(bb2.right, bb2.bottom));
+        points.add(new Vec2(bb2.centerX(), bb2.centerY()));
 
-        int l1 = Math.min(bb1.left, bb1.right;
+        for (Vec2 point : points) {
+            if(bb1.left <= point.x && point.x <= bb1.right){
+                if(bb1.bottom <= point.y && point.y <= bb1.top){
+                    return true;
+                }
+            }
+        }
+        return false;
+
 
 //        int[] h = [bb2.left, bb2.right, bb2.bottom];
 //
