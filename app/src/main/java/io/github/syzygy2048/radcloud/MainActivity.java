@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -14,19 +13,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DocumentManager dm = DocumentManager.getInstance();
+        final DocumentManager dm = DocumentManager.getInstance();
 
-        dm.readDocument(this, R.raw.test, "first document");
-        dm.readDocument(this, R.raw.test2, "second document");
-        dm.readDocument(this, R.raw.test3, "Harry Potter");
-        dm.readDocument(this, R.raw.test4, "Fifty Shades");
-        dm.readDocument(this, R.raw.test5, "fifth document");
-        dm.process();
+//        dm.readDocument(this, R.raw.test, "Chapter 1");
+//        dm.readDocument(this, R.raw.test2, "Chapter 2");
+//        dm.readDocument(this, R.raw.test3, "Chapter 3");
+//        dm.readDocument(this, R.raw.test4, "Chapter 4");
+//        dm.readDocument(this, R.raw.test5, "Chapter 5");
+//        dm.readDocument(this, R.raw.test5, "fifth document");
 
-        TextView text = findViewById(R.id.text);
+        dm.readDocument(this, R.raw.wdqk1, "Chapter 1");
+        dm.readDocument(this, R.raw.wdqk2, "Chapter 2");
+        dm.readDocument(this, R.raw.wdqk3, "Chapter 3");
+        dm.readDocument(this, R.raw.wdqk4, "Chapter 4");
+        dm.readDocument(this, R.raw.wdqk5, "Chapter 5");
+
+
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dm.process();
                 startActivity(new Intent(MainActivity.this, RadCloudActivity.class));
             }
         });

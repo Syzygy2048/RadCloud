@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -19,6 +20,8 @@ import java.util.HashMap;
  */
 public class RadCloudActivity extends AppCompatActivity {
     private ImageView radCloudView;
+
+    public static final int MAXIMUM_TEXT_SIZE = 150;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class RadCloudActivity extends AppCompatActivity {
         int startDegree = 0;
         ArrayList<String> tmpDocuments = new ArrayList<>(dm.getDocumentList().keySet());
         ArrayList<String> documents = new ArrayList<>();
-        int categoryTh = (tmpDocuments.size() / 2 )- 1;
+        int categoryTh = (tmpDocuments.size() / 2) - 1;
         for (int i = 0; i < tmpDocuments.size(); i++) {
             System.out.println("Reihenfolge Original" +
                     ": " + tmpDocuments.get(i));
@@ -81,12 +84,12 @@ public class RadCloudActivity extends AppCompatActivity {
             Path mainTextPath = new Path();
             //TODO: allign text on center
             if (i > categoryTh) {
-                    mainTextPath.addArc(100, 100, 2460, 1340, startDegree + (stepDegree / 3), stepDegree);
+                mainTextPath.addArc(100, 100, 2460, 1340, startDegree + (stepDegree / 3), stepDegree);
             } else {
                 if (docCount % 2 == 0) {
                     mainTextPath.addArc(100, 100, 2460, 1340, (180 - (startDegree) - (stepDegree / 3)), -stepDegree);
                 } else {
-                    mainTextPath.addArc(100, 100, 2460, 1340, ((180 - (stepDegree/2)) - (startDegree) - (stepDegree / 3)), -stepDegree);
+                    mainTextPath.addArc(100, 100, 2460, 1340, ((180 - (stepDegree / 2)) - (startDegree) - (stepDegree / 3)), -stepDegree);
                 }
             }
             canvas.drawTextOnPath(documents.get(i), mainTextPath, 0, 0, categoryTextPaint);
@@ -104,12 +107,12 @@ public class RadCloudActivity extends AppCompatActivity {
             System.out.println("Reihenfolge: " + documents.get(i));
             Path smallTextPath = new Path();
             if (i > categoryTh) {
-                smallTextPath.addArc(200, 200, 2360, 1240, startDegree + (stepDegree/3), stepDegree);
+                smallTextPath.addArc(200, 200, 2360, 1240, startDegree + (stepDegree / 3), stepDegree);
             } else {
                 if (docCount % 2 == 0) {
                     smallTextPath.addArc(200, 200, 2360, 1240, (180 - (startDegree) - (stepDegree / 3)), -stepDegree);
                 } else {
-                    smallTextPath.addArc(200, 200, 2360, 1240, ((180 - (stepDegree/2)) - (startDegree) - (stepDegree / 3)), -stepDegree);
+                    smallTextPath.addArc(200, 200, 2360, 1240, ((180 - (stepDegree / 2)) - (startDegree) - (stepDegree / 3)), -stepDegree);
                 }
             }
             canvas.drawTextOnPath(documents.get(i), smallTextPath, 0, 0, smallTextPaint);
@@ -118,7 +121,6 @@ public class RadCloudActivity extends AppCompatActivity {
         }
 
         float maximumWordRelevance = dm.getMaximumWordRelevance();
-        final int maximumTextSize = 100;
 
         ovalPaint.setStrokeWidth(1);
         ovalPaint.setColor(Color.BLACK);
@@ -133,18 +135,18 @@ public class RadCloudActivity extends AppCompatActivity {
 
         for (Word word : dm.getWordList()) {
             float maximumRelevance = word.getMaximumRelevance();
-            canvas.drawLine(1280, 770, 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, ovalPaint);
-            float textSize = maximumTextSize * (maximumRelevance / maximumWordRelevance);
+//            canvas.drawLine(1280, 770, word.getPosition().x, word.getPosition().y, ovalPaint);
+            float textSize = MAXIMUM_TEXT_SIZE * (maximumRelevance / maximumWordRelevance);
             if (textSize < 5.0) {
                 textSize = 5;
             }
             textPaint.setTextSize(textSize);
-            Integer textColor = Color.argb( 255, 0, 0, 0);
+            Integer textColor = Color.argb(255, 0, 0, 0);
             HashMap<String, Float> weights = word.getPlacementWeights();
             for (String document : weights.keySet()) {
-                int r =Math.round( (float) Color.red(categoryColorCodes.get(document)) * weights.get(document));
-                int g = Math.round( (float) Color.green(categoryColorCodes.get(document)) * weights.get(document));
-                int b = Math.round( (float) Color.blue(categoryColorCodes.get(document)) * weights.get(document));
+                int r = Math.round((float) Color.red(categoryColorCodes.get(document)) * weights.get(document));
+                int g = Math.round((float) Color.green(categoryColorCodes.get(document)) * weights.get(document));
+                int b = Math.round((float) Color.blue(categoryColorCodes.get(document)) * weights.get(document));
 
 
                 int oldR = Color.red(textColor);
@@ -170,18 +172,24 @@ public class RadCloudActivity extends AppCompatActivity {
             }
             textPaint.setColor(textColor);
             //TODO: eliminate magic numbers, also pay attention for barchart
-            canvas.drawText(word.getTerm(), 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, textPaint);
             textWidth = textPaint.measureText(word.getTerm());
+            canvas.drawText(word.getTerm(), word.getPosition().x - textWidth / 2, word.getPosition().y + textSize / 2, textPaint);
+            Random rnd = new Random();
+            textPaint.setColor(Color.argb(50, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
+            canvas.drawRect(word.getPosition().boundingBox, textPaint);
+
+
             //TODO: is this the right relevance measure?
             HashMap<String, Float> relevance = word.getPlacementWeights();
-            float barchartX = 1280 + 640 * word.getPosition().x;
-            float barchartY = 770 +  385 * word.getPosition().y +5; //offset
+            float barchartX = word.getPosition().x - textWidth / 2;
+            float barchartY = word.getPosition().y + 5 + textSize / 2; //offset
+            barChartPaint.setStrokeWidth(textSize/3);
             for (String doc : relevance.keySet()) {
                 //canvas.drawLine(1280, 770, 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, ovalPaint);
                 System.out.println("Word: " + word.getTerm() + " Doc: " + doc + " textWidth: " + textWidth + " category weight: " + word.getCategoryWeights().get(doc) + " relevance: " + maximumRelevance);
                 float barWidth = textWidth * relevance.get(doc);
                 barChartPaint.setColor(categoryColorCodes.get(doc));
-                canvas.drawLine(barchartX, barchartY, (barchartX + barWidth), barchartY, barChartPaint);
+//                canvas.drawLine(barchartX, barchartY, (barchartX + barWidth), barchartY, barChartPaint);
                 barchartX += barWidth;
             }
         }
