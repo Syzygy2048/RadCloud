@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -196,12 +195,12 @@ public class RadCloudActivity extends AppCompatActivity {
             }
         }
 
-        canvas.drawRect(new Rect(0,0,50,50), barChartPaint);
-        Paint linePaint = new Paint();
-        for (int i = 0; i < 2700 ; i = i + 100){
-            canvas.drawLine(0, i, 2700, i, linePaint);
-            canvas.drawLine(i, 0 , i, 2700, linePaint);
-        }
+//        canvas.drawRect(new Rect(0,0,50,50), barChartPaint);
+//        Paint linePaint = new Paint();
+//        for (int i = 0; i < 2700 ; i = i + 100){
+//            canvas.drawLine(0, i, 2700, i, linePaint);
+//            canvas.drawLine(i, 0 , i, 2700, linePaint);
+//        }
 
         radCloudView.setImageBitmap(bm);
 

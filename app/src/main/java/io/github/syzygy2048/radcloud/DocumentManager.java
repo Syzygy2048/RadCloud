@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class DocumentManager {
 
@@ -23,26 +22,26 @@ public class DocumentManager {
     private HashMap<String, Vec2> documentVectors = new HashMap<>();
     private ArrayList<Word> wordList = new ArrayList<>();
     private Ellipse frame = new Ellipse();
-    //TODO: it should be a circle
+
     ArrayList<Vec2> positionList = new ArrayList<>
             (
                     Arrays.asList(
                             (new Vec2(10, 0)),
-                            (new Vec2(10, 5)),
-                            (new Vec2(10, 10)),
-                            (new Vec2(5, 10)),
+                            (new Vec2(9, 4)),
+                            (new Vec2(7, 7)),
+                            (new Vec2(4, 9)),
                             (new Vec2(0, 10)),
-                            (new Vec2(-5, 10)),
-                            (new Vec2(-10, 10)),
-                            (new Vec2(-10, 5)),
+                            (new Vec2(-4, 9)),
+                            (new Vec2(-7, 7)),
+                            (new Vec2(-9, 4)),
                             (new Vec2(-10, 0)),
-                            (new Vec2(-10, -5)),
-                            (new Vec2(-10, -10)),
-                            (new Vec2(-5, -10)),
+                            (new Vec2(-9, -4)),
+                            (new Vec2(-7, -7)),
+                            (new Vec2(-4, -9)),
                             (new Vec2(0, -10)),
-                            (new Vec2(5, -10)),
-                            (new Vec2(10, -10)),
-                            (new Vec2(10, -5))
+                            (new Vec2(4, -9)),
+                            (new Vec2(7, -7)),
+                            (new Vec2(9, -4))
                     )
             );
 
@@ -298,6 +297,7 @@ public class DocumentManager {
                 if (weight > maximumCategoryWeight) {
                     maximumCategoryWeight = weight;
                 }
+                //TODO: soll das 2 mal die selbe abfrage sein? soll es umgekehrt sein?
                 if (weight > maximumWordRelevance) {
                     maximumWordRelevance = weight;
                 }
@@ -354,9 +354,9 @@ public class DocumentManager {
         LinkedList<Word> circleSorted = new LinkedList<>(); //sorted by distance to center
 
         for (Word word : wordList) {
-            if (word.getPosition().x < 1000){
-                continue;
-            }
+//            if (word.getPosition().x < 1000){
+//                continue;
+//            }
             if (circleSorted.size() == 0) {
                 circleSorted.add(word);
             } else {
@@ -376,9 +376,9 @@ public class DocumentManager {
         calculateBoundingBoxes();
         List<Word> placedWords = new ArrayList<>();
         for (Word word : circleSorted) {
-            if (word.getPosition().x < 1000){
-                continue;
-            }
+//            if (word.getPosition().x < 1000){
+//                continue;
+//            }
             int i = 0;
             word.getPosition().originalX = word.getPosition().x;
             word.getPosition().originalY = word.getPosition().y;
@@ -387,15 +387,14 @@ public class DocumentManager {
                 calculateBoundingBoxes();
             }
             //if (word.getTerm().equals("impression") || word.getTerm().equals("mother")) {
-                Log.d("Ringcheck", word.getTerm() + " Word placed at: " + word.getPosition().x + ", " +word.getPosition().y  + " " + checkForOverlap(placedWords, word));
+//                Log.d("Ringcheck", word.getTerm() + " Word placed at: " + word.getPosition().x + ", " +word.getPosition().y  + " " + checkForOverlap(placedWords, word));
             //           }
             placedWords.add(word);
         }
     }
 
     private void fixOverlaps(Word word, int i){
-
-
+ //TODO: consider calculating positionList rather than using a hard coded version to get tighter results - current version arranges code along 16 axes rather than wherever it fits.
         word.getPosition().x = word.getPosition().originalX + positionList.get(i%positionList.size()).x * (int)(Math.floor(i/positionList.size()) + 1);
         word.getPosition().y = word.getPosition().originalY + positionList.get(i%positionList.size()).y * (int)(Math.floor(i/positionList.size()) + 1);
 //        Log.d("Rad fixOverlap", word.getTerm() + " " + word.getPosition().x + " " + word.getPosition().y);
@@ -430,7 +429,6 @@ public class DocumentManager {
         if(bb.right == 0){
             Log.d("Ring Check","skipped due to 0 for word " + word.getTerm());
             return false;
-
         }
         boolean result = false;
         if ( (( Math.pow((bb.left - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.bottom - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
@@ -443,7 +441,7 @@ public class DocumentManager {
             result = true;
         }
         //if (word.getTerm().equals("impression") || word.getTerm().equals("mother")) {
-            Log.d("Ring check", word.getTerm() +" l:" + word.getPosition().boundingBox.left + ",r:" + word.getPosition().boundingBox.right + ",b:" + word.getPosition().boundingBox.bottom + ",t:" + word.getPosition().boundingBox.top + " result: " + result   );
+//            Log.d("Ring check", word.getTerm() +" l:" + word.getPosition().boundingBox.left + ",r:" + word.getPosition().boundingBox.right + ",b:" + word.getPosition().boundingBox.bottom + ",t:" + word.getPosition().boundingBox.top + " result: " + result   );
         //}
         return result;
     }
