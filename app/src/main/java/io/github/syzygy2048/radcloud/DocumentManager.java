@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,29 @@ public class DocumentManager {
     private HashMap<String, Integer> documentList = new HashMap<>();
     private HashMap<String, Vec2> documentVectors = new HashMap<>();
     private ArrayList<Word> wordList = new ArrayList<>();
+    private Ellipse frame = new Ellipse();
+    //TODO: it should be a circle
+    ArrayList<Vec2> positionList = new ArrayList<>
+            (
+                    Arrays.asList(
+                            (new Vec2(10, 0)),
+                            (new Vec2(10, 5)),
+                            (new Vec2(10, 10)),
+                            (new Vec2(5, 10)),
+                            (new Vec2(0, 10)),
+                            (new Vec2(-5, 10)),
+                            (new Vec2(-10, 10)),
+                            (new Vec2(-10, 5)),
+                            (new Vec2(-10, 0)),
+                            (new Vec2(-10, -5)),
+                            (new Vec2(-10, -10)),
+                            (new Vec2(-5, -10)),
+                            (new Vec2(0, -10)),
+                            (new Vec2(5, -10)),
+                            (new Vec2(10, -10)),
+                            (new Vec2(10, -5))
+                    )
+            );
 
     private static DocumentManager instance;
 
@@ -45,6 +69,16 @@ public class DocumentManager {
             originalX = x;
             originalY = y;
         }
+    }
+
+    public class Ellipse {
+        int h = 1280;
+        int k = 720;
+        int a = 1080;
+        int b = 520;
+
+        Ellipse(){};
+
     }
 
     private float maximumWordRelevance = -1;
@@ -305,39 +339,6 @@ public class DocumentManager {
             intendedPos.y = 770 + 385 * intendedPos.y;
             word.setIntendedPosition(intendedPos);
         }
-
-
-//        for (Word word : wordList) {
-//            HashMap<String, Float> normalizedWeights = new HashMap<>();
-//            HashMap<String, Float> categoryWeights = new HashMap<>();
-//            HashMap<String, Float> termFrequency = word.getTermFrequency();
-//            for (String document : termFrequency.keySet()) {
-//                categoryWeights.put(document, (termFrequency.get(document) *  word.getInverseDocumentFrequency()) / documentList.get(document));
-//            }
-//
-//            HashMap<String, Float> documentWeights = new HashMap<>();
-//
-//            float wordTotalWeight = 0;
-//            for (String normalizedWeight : normalizedWeights.keySet()) {
-//                wordTotalWeight += normalizedWeights.get(normalizedWeight);
-//            }
-//            for (String document : termFrequency.keySet()) {
-//                documentWeights.put(document, normalizedWeights.get(document) / wordTotalWeight);
-//            }
-//
-//            word.setNormalizedWeights(normalizedWeights);
-//            word.setDocumentWeights(documentWeights);
-//
-//            Vec2 intendedPos = new Vec2(0,0);
-//            for (String document : documentWeights.keySet()) {
-//                Vec2 documentVector = documentVectors.get(document);
-//                float weight = documentWeights.get(document);
-//                intendedPos.x += weight * documentVector.x;
-//                intendedPos.y += weight * documentVector.y;
-//            }
-//            Log.d("bla", word.getTerm() + " " + intendedPos.x + ", " + intendedPos.y);
-//            word.setIntendedPosition(intendedPos);
-//        }
     }
 
     public HashMap<String, Integer> getDocumentList() {
@@ -353,6 +354,9 @@ public class DocumentManager {
         LinkedList<Word> circleSorted = new LinkedList<>(); //sorted by distance to center
 
         for (Word word : wordList) {
+            if (word.getPosition().x < 1000){
+                continue;
+            }
             if (circleSorted.size() == 0) {
                 circleSorted.add(word);
             } else {
@@ -368,13 +372,13 @@ public class DocumentManager {
                 }
             }
         }
-        for (Word word : circleSorted) {
-            Log.d("Rad Csort Length", word.getTerm() + " " + (Math.abs(1280 - word.getPosition().x) + Math.abs(770 - word.getPosition().y)));
-        }
 
         calculateBoundingBoxes();
         List<Word> placedWords = new ArrayList<>();
         for (Word word : circleSorted) {
+            if (word.getPosition().x < 1000){
+                continue;
+            }
             int i = 0;
             word.getPosition().originalX = word.getPosition().x;
             word.getPosition().originalY = word.getPosition().y;
@@ -382,28 +386,15 @@ public class DocumentManager {
                 fixOverlaps(word, i++);
                 calculateBoundingBoxes();
             }
+            //if (word.getTerm().equals("impression") || word.getTerm().equals("mother")) {
+                Log.d("Ringcheck", word.getTerm() + " Word placed at: " + word.getPosition().x + ", " +word.getPosition().y  + " " + checkForOverlap(placedWords, word));
+            //           }
             placedWords.add(word);
         }
     }
 
     private void fixOverlaps(Word word, int i){
-        ArrayList<Vec2> positionList = new ArrayList<>();
-        positionList.add(new Vec2(10, 0));
-        positionList.add(new Vec2(10, 5));
-        positionList.add(new Vec2(10, 10));
-        positionList.add(new Vec2(5, 10));
-        positionList.add(new Vec2(0, 10));
-        positionList.add(new Vec2(-5, 10));
-        positionList.add(new Vec2(-10, 10));
-        positionList.add(new Vec2(-10, 5));
-        positionList.add(new Vec2(-10, 0));
-        positionList.add(new Vec2(-10, -5));
-        positionList.add(new Vec2(-10, -10));
-        positionList.add(new Vec2(-5, -10));
-        positionList.add(new Vec2(0, -10));
-        positionList.add(new Vec2(5, -10));
-        positionList.add(new Vec2(10, -10));
-        positionList.add(new Vec2(10, -5));
+
 
         word.getPosition().x = word.getPosition().originalX + positionList.get(i%positionList.size()).x * (int)(Math.floor(i/positionList.size()) + 1);
         word.getPosition().y = word.getPosition().originalY + positionList.get(i%positionList.size()).y * (int)(Math.floor(i/positionList.size()) + 1);
@@ -411,6 +402,9 @@ public class DocumentManager {
     }
 
     private boolean checkForOverlap(List<Word> placedWords, Word word) {
+        if (outsideTheRing(word)) { //check ellipse
+            return true;
+        }
         for (Word placedWord : placedWords) {
             if (overlaps(word.getPosition().boundingBox, placedWord.getPosition().boundingBox)
                     || overlaps(placedWord.getPosition().boundingBox, word.getPosition().boundingBox)) {
@@ -419,28 +413,6 @@ public class DocumentManager {
         }
         return false;
     }
-//        if (list.size() == i || list.get(i).getWordCount().get(document) < word.getWordCount().get(document)) {
-//            list.add(i, word);
-//            break;
-//        }
-//    }
-
-//        }
-//
-//
-//
-//
-//        int attempts = 200; //prevent endless loop if cluster resolving fails
-//        calculateBoundingBoxes();
-//        calculateOverlapClusters(listOfClusters);
-//        while (wordList.size() != listOfClusters.size() && attempts-- > 0) {
-//            Log.d("Radcloud Overlap", "attempts " + attempts + " " + wordList.size() + " " + listOfClusters.size());
-//            resolveClusters(listOfClusters);
-//            calculateBoundingBoxes();
-//            listOfClusters = new ArrayList<>();
-//            calculateOverlapClusters(listOfClusters);
-//        }
-//}
 
     float getMaximumWordRelevance() {
         return maximumWordRelevance;
@@ -451,58 +423,29 @@ public class DocumentManager {
 
     }
 
-    private void resolveClusters(List<List<Word>> listOfClusters) {
-        Random rnd = new Random();
-        for (List<Word> cluster : listOfClusters) {
-            if (cluster.size() > 1) {
-                float centerX = 0;
-                float centerY = 0;
-                for (Word word : cluster) {
-                    centerX += word.getPosition().boundingBox.centerX();
-                    centerY += word.getPosition().boundingBox.centerY();
-                }
-                centerX /= cluster.size();
-                centerY /= cluster.size();
-                float xOffset;
-                float yOffset;
-                for (Word word : cluster) {
-                    xOffset = centerX - word.getPosition().boundingBox.centerX();
-                    yOffset = centerY - word.getPosition().boundingBox.centerY();
-                    if (xOffset == 0 && yOffset == 0) {
-                        xOffset = ((rnd.nextFloat() % 2 - 1) * 0.00005f);
-                        yOffset = ((rnd.nextFloat() % 2 - 1) * 0.00005f);
-                    }
-                    word.getPosition().x += xOffset;
-                    word.getPosition().y += yOffset;
-                }
-            }
-        }
-    }
 
-    private void calculateOverlapClusters(List<List<Word>> listOfClusters) {
-        for (Word word : DocumentManager.getInstance().getWordList()) {
-            boolean overlap = false;
-            List<Word> cluster = new ArrayList<>();
-            for (List<Word> wordCluster : listOfClusters) {
-                for (Word clusterWord : wordCluster) {
-//                    Rect.intersects(clusterWord.getPosition().boundingBox, word.getPosition().boundingBox) glitched, doesn't work
-                    if (overlaps(word.getPosition().boundingBox, clusterWord.getPosition().boundingBox)) {
-                        overlap = true;
-                        Log.d("Clusters", "overlap between " + clusterWord.getTerm() + " and " + word.getTerm());
-                        break;
-                    }
-                }
-                if (overlap) {
-                    wordCluster.add(word);
-                    break;
-                }
-            }
-            if (!overlap) {
-                cluster.add(word);
-                listOfClusters.add(cluster);
-            }
+    private boolean outsideTheRing(Word word) {
+        //Equation of ellipse: (x-h)^2/a^2 + (y-k)^2/b^2 = 1 (h,k) center a, b horizontal/vertical radius
+        Rect bb = word.getPosition().boundingBox;
+        if(bb.right == 0){
+            Log.d("Ring Check","skipped due to 0 for word " + word.getTerm());
+            return false;
+
         }
-        Log.d("Clusters", "words " + DocumentManager.getInstance().getWordList().size() + ", clusters " + listOfClusters.size());
+        boolean result = false;
+        if ( (( Math.pow((bb.left - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.bottom - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
+            result = true;
+        } else if ( (( Math.pow((bb.left - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.top - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
+            result = true;
+        } else if ( (( Math.pow((bb.right - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.bottom - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
+            result = true;
+        } else if ( (( Math.pow((bb.right - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.top - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
+            result = true;
+        }
+        //if (word.getTerm().equals("impression") || word.getTerm().equals("mother")) {
+            Log.d("Ring check", word.getTerm() +" l:" + word.getPosition().boundingBox.left + ",r:" + word.getPosition().boundingBox.right + ",b:" + word.getPosition().boundingBox.bottom + ",t:" + word.getPosition().boundingBox.top + " result: " + result   );
+        //}
+        return result;
     }
 
     private boolean overlaps(Rect bb1, Rect bb2) {
@@ -522,32 +465,6 @@ public class DocumentManager {
         }
         return false;
 
-
-//        int[] h = [bb2.left, bb2.right, bb2.bottom];
-//
-//        for (int i : bb) {
-//            boolean horizontal = bb1.left <=
-//        }
-//
-//
-//
-//        boolean left = bb1.left >= bb2.left && bb1.left <= bb2.right;
-//        boolean right = bb1.right >= bb2.left && bb1.right <= bb2.right;
-//        boolean top = bb1.top <= bb2.top && bb1.top >= bb2.bottom;
-//        boolean bottom = bb1.bottom <= bb2.top && bb1.bottom >= bb2.bottom;
-//        boolean intersect = (left || right) && (top || bottom);
-//
-//        boolean xContains = bb1.left <= bb2.left && bb1.right >= bb2.right;
-//        boolean xContainsSwitch = bb2.left <= bb1.left && bb2.right >= bb1.right;
-//        boolean yContains = bb1.top <= bb2.top && bb1.bottom >= bb2.bottom;
-//        boolean yContainsSwitch = bb2.top <= bb1.top && bb2.bottom >= bb1.bottom;
-//        boolean aContainsB = xContains && yContains;
-//        boolean bContainsA = xContainsSwitch && yContainsSwitch;
-//
-//        boolean horizontalIntersection = xContains && (top || bottom);
-//        boolean verticalIntersection = yContains && (left || right);
-//
-//        return intersect || aContainsB || bContainsA || verticalIntersection || horizontalIntersection;
     }
 }
 

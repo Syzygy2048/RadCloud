@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -93,7 +95,7 @@ public class RadCloudActivity extends AppCompatActivity {
             }
             canvas.drawTextOnPath(documents.get(i), mainTextPath, 0, 0, categoryTextPaint);
             ovalPaint.setColor(colors.get(i));
-
+            //TODO: the parameters of the ellipse are also used in overlap detection!
             canvas.drawArc(200, 200, 2360, 1240, startDegree, stepDegree, false, ovalPaint);
 
             startDegree += stepDegree;
@@ -171,11 +173,12 @@ public class RadCloudActivity extends AppCompatActivity {
             }
             textPaint.setColor(textColor);
             //TODO: eliminate magic numbers, also pay attention for barchart
+            String term = "l:" + word.getPosition().boundingBox.left + ",r:" + word.getPosition().boundingBox.right + ",b:" + word.getPosition().boundingBox.bottom + ",t:" +word.getPosition().boundingBox.top;
             textWidth = textPaint.measureText(word.getTerm());
             canvas.drawText(word.getTerm(), word.getPosition().x - textWidth / 2, word.getPosition().y + textSize / 2, textPaint);
-//            Random rnd = new Random();
-//            textPaint.setColor(Color.argb(100, rnd.nextInt(100), rnd.nextInt(100), rnd.nextInt(100)));
-//            canvas.drawRect(word.getPosition().boundingBox, textPaint);
+            Random rnd = new Random();
+            textPaint.setColor(Color.argb(100, rnd.nextInt(100), rnd.nextInt(100), rnd.nextInt(100)));
+            canvas.drawRect(word.getPosition().boundingBox, textPaint);
 
 
             //TODO: is this the right relevance measure?
@@ -191,6 +194,13 @@ public class RadCloudActivity extends AppCompatActivity {
                 canvas.drawLine(barchartX, barchartY, (barchartX + barWidth), barchartY, barChartPaint);
                 barchartX += barWidth;
             }
+        }
+
+        canvas.drawRect(new Rect(0,0,50,50), barChartPaint);
+        Paint linePaint = new Paint();
+        for (int i = 0; i < 2700 ; i = i + 100){
+            canvas.drawLine(0, i, 2700, i, linePaint);
+            canvas.drawLine(i, 0 , i, 2700, linePaint);
         }
 
         radCloudView.setImageBitmap(bm);

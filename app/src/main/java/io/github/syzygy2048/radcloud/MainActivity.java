@@ -3,6 +3,7 @@ package io.github.syzygy2048.radcloud;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 dm.process();
                 startActivity(new Intent(MainActivity.this, RadCloudActivity.class));
+                Log.d("RadCloud","started");
             }
         });
     }
