@@ -17,6 +17,7 @@ public class SpiralUtil {
 
     final static double theta = chord / awayStep;
 
+    //TODO: consider settings chord, radius and numberOfSpirals based on text size
     public static DocumentManager.Vec2 calculateSpiral(int iteration){
         double deltaTheta = theta;
         double away =  awayStep * deltaTheta;

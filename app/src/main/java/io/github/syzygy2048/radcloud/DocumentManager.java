@@ -53,8 +53,8 @@ public class DocumentManager {
         int a = 1080;
         int b = 520;
 
-        Ellipse(){};
-
+        Ellipse() {
+        }
     }
 
     private float maximumWordRelevance = -1;
@@ -110,12 +110,38 @@ public class DocumentManager {
     }
 
     public void process() {
+        long time = System.currentTimeMillis();
         calculateDocumentVectors();
-//        selectTop100WordsPerDocument();
+        long time2 = System.currentTimeMillis();
+        Log.d("Performance", "document vectors took " + ((time2 - time)) + " ms");
+        time = System.currentTimeMillis();
+
+
+        Log.d("Word Filter Performance", "word count before " + wordList.size());
+        selectTop100WordsPerDocument();
+        Log.d("Word Filter Performance", "word count after " + wordList.size());
+        time2 = System.currentTimeMillis();
+        Log.d("Performance", "selecting top 100 per category took " + ((time2 - time)) + " ms");
+        time = System.currentTimeMillis();
+
         calculateTermFrequency();
+        time2 = System.currentTimeMillis();
+        Log.d("Performance", "calculate tf took " + ((time2 - time)) + " ms");
+        time = System.currentTimeMillis();
+
         calculateInverseDocumentFrequency();
+        time2 = System.currentTimeMillis();
+        Log.d("Performance", "calculate idf took " + ((time2 - time)) + " ms");
+        time = System.currentTimeMillis();
         calculatePosition();
+        time2 = System.currentTimeMillis();
+        Log.d("Performance", "calc pos took " + ((time2 - time)) + " ms");
+        time = System.currentTimeMillis();
+
         resolveOverlaps();
+        time2 = System.currentTimeMillis();
+        Log.d("Performance", "resolve overlaps took " + ((time2 - time)) + " ms");
+
     }
 
     /**
@@ -128,6 +154,8 @@ public class DocumentManager {
         for (String document : documentList.keySet()) {
             selectedWords.put(document, new LinkedList<Word>());
         }
+        Log.d("Word Filter Performance", "before selection");
+        long time = System.currentTimeMillis();
         for (Word word : wordList) {
             for (String document : word.getWordCount().keySet()) {
                 Integer countInDocument = word.getWordCount().get(document);
@@ -142,6 +170,8 @@ public class DocumentManager {
                 }
             }
         }
+        Log.d("Word Filter Performance", "selection took " + (System.currentTimeMillis() - time) + " ms");
+        time = System.currentTimeMillis();
         wordList.clear();
         for (String document : selectedWords.keySet()) {
             int i = 0;
@@ -152,7 +182,7 @@ public class DocumentManager {
                 }
             }
         }
-        Log.d("RadCloud Filter", "number of words " + wordList.size());
+        Log.d("Word Filter Performance", "filtering took " + (System.currentTimeMillis() - time) + " ms");
     }
 
     private void calculateBoundingBoxes() {
@@ -317,9 +347,6 @@ public class DocumentManager {
         LinkedList<Word> circleSorted = new LinkedList<>(); //sorted by distance to center
 
         for (Word word : wordList) {
-//            if (word.getPosition().x < 1000){
-//                continue;
-//            }
             if (circleSorted.size() == 0) {
                 circleSorted.add(word);
             } else {
@@ -338,30 +365,19 @@ public class DocumentManager {
 
         calculateBoundingBoxes();
         List<Word> placedWords = new ArrayList<>();
-        long startTime = System.currentTimeMillis();
         for (Word word : circleSorted) {
-//            if (word.getPosition().x < 1000){
-//                continue;
-//            }
-            int i = 0;
             word.getPosition().originalX = word.getPosition().x;
             word.getPosition().originalY = word.getPosition().y;
-            while(checkForOverlap(placedWords, word)){
+            int i = 0;
+            while (i < 500 && checkForOverlap(placedWords, word)) {
                 fixOverlaps(word, i++);
                 word.calculateBoundingBox(maximumWordRelevance);
-//                calculateBoundingBoxes();
             }
-            //if (word.getTerm().equals("impression") || word.getTerm().equals("mother")) {
-//                Log.d("Ringcheck", word.getTerm() + " Word placed at: " + word.getPosition().x + ", " +word.getPosition().y  + " " + checkForOverlap(placedWords, word));
-            //           }
             placedWords.add(word);
         }
-        Log.d("RadCloud Collision", "resolving took " + (System.currentTimeMillis() - startTime)/1000 + " seconds");
-        Thread.dumpStack();
     }
 
-    private void fixOverlaps(Word word, int i){
- //TODO: consider calculating positionList rather than using a hard coded version to get tighter results - current version arranges code along 16 axes rather than wherever it fits.
+    private void fixOverlaps(Word word, int i) {
         Vec2 offset = SpiralUtil.calculateSpiral(i);
         word.getPosition().x = word.getPosition().originalX + offset.x;
         word.getPosition().y = word.getPosition().originalY + offset.y;
@@ -385,27 +401,21 @@ public class DocumentManager {
         return maximumWordRelevance;
     }
 
-
-    private void circleResolve() {
-
-    }
-
-
     private boolean outsideTheRing(Word word) {
         //Equation of ellipse: (x-h)^2/a^2 + (y-k)^2/b^2 = 1 (h,k) center a, b horizontal/vertical radius
         Rect bb = word.getPosition().boundingBox;
-        if(bb.right == 0){
-            Log.d("Ring Check","skipped due to 0 for word " + word.getTerm());
+        if (bb.right == 0) {
+            Log.d("Ring Check", "skipped due to 0 for word " + word.getTerm());
             return false;
         }
         boolean result = false;
-        if ( (( Math.pow((bb.left - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.bottom - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
+        if (((Math.pow((bb.left - frame.h), 2) / Math.pow(frame.a, 2)) + ((Math.pow((bb.bottom - frame.k), 2) / Math.pow(frame.b, 2)))) >= 1) {
             result = true;
-        } else if ( (( Math.pow((bb.left - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.top - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
+        } else if (((Math.pow((bb.left - frame.h), 2) / Math.pow(frame.a, 2)) + ((Math.pow((bb.top - frame.k), 2) / Math.pow(frame.b, 2)))) >= 1) {
             result = true;
-        } else if ( (( Math.pow((bb.right - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.bottom - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
+        } else if (((Math.pow((bb.right - frame.h), 2) / Math.pow(frame.a, 2)) + ((Math.pow((bb.bottom - frame.k), 2) / Math.pow(frame.b, 2)))) >= 1) {
             result = true;
-        } else if ( (( Math.pow((bb.right - frame.h),2) / Math.pow(frame.a,2) ) + ((Math.pow((bb.top - frame.k),2)/Math.pow(frame.b,2)) )) >= 1 ) {
+        } else if (((Math.pow((bb.right - frame.h), 2) / Math.pow(frame.a, 2)) + ((Math.pow((bb.top - frame.k), 2) / Math.pow(frame.b, 2)))) >= 1) {
             result = true;
         }
         //if (word.getTerm().equals("impression") || word.getTerm().equals("mother")) {
@@ -423,8 +433,8 @@ public class DocumentManager {
         points.add(new Vec2(bb2.centerX(), bb2.centerY()));
 
         for (Vec2 point : points) {
-            if(bb1.left <= point.x && point.x <= bb1.right){
-                if(bb1.bottom <= point.y && point.y <= bb1.top){
+            if (bb1.left <= point.x && point.x <= bb1.right) {
+                if (bb1.bottom <= point.y && point.y <= bb1.top) {
                     return true;
                 }
             }
