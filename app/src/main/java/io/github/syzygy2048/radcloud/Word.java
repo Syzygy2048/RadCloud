@@ -1,5 +1,8 @@
 package io.github.syzygy2048.radcloud;
 
+import android.graphics.Paint;
+import android.graphics.Rect;
+
 import java.util.HashMap;
 
 /**
@@ -104,5 +107,27 @@ public class Word {
 
     public DocumentManager.Vec2 getPosition(){
         return intendedPosition;
+    }
+
+
+    public void calculateBoundingBox(float maximumRelevance){
+        Paint paint = new Paint();
+        calculateBoundingBox(paint, maximumRelevance);
+    }
+
+    public void calculateBoundingBox(Paint paint, float maximumWordRelevance) {
+        float textSize = RadCloudActivity.MAXIMUM_TEXT_SIZE * (getMaximumRelevance() / maximumWordRelevance);
+        if (textSize < 5.0) {
+            textSize = 5;
+        }
+        paint.setTextSize(textSize);
+        float textWidth = paint.measureText(getTerm());
+
+        Rect rect = new Rect(
+                (int) (intendedPosition.x - textWidth / 2),
+                (int) (intendedPosition.y + textSize / 2),
+                (int) (intendedPosition.x + textWidth / 2),
+                (int) (intendedPosition.y - textSize / 2));
+        intendedPosition.boundingBox = rect;
     }
 }

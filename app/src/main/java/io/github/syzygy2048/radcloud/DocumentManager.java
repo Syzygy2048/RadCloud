@@ -181,22 +181,8 @@ public class DocumentManager {
     private void calculateBoundingBoxes() {
         //calculate bounding boxes
         Paint paint = new Paint();
-        float textWidth;
         for (Word word : wordList) {
-            float textSize = RadCloudActivity.MAXIMUM_TEXT_SIZE * (word.getMaximumRelevance() / maximumWordRelevance);
-            if (textSize < 5.0) {
-                textSize = 5;
-            }
-            paint.setTextSize(textSize);
-            textWidth = paint.measureText(word.getTerm());
-
-            Rect rect = new Rect(
-                    (int) (word.getPosition().x - textWidth / 2),
-                    (int) (word.getPosition().y + textSize / 2),
-                    (int) (word.getPosition().x + textWidth / 2),
-                    (int) (word.getPosition().y - textSize / 2));
-            word.getPosition().boundingBox = rect;
-//            canvas.drawRect(rect, new Paint());
+            word.calculateBoundingBox(paint, maximumWordRelevance);
         }
     }
 
@@ -375,6 +361,7 @@ public class DocumentManager {
 
         calculateBoundingBoxes();
         List<Word> placedWords = new ArrayList<>();
+        long startTime = System.currentTimeMillis();
         for (Word word : circleSorted) {
 //            if (word.getPosition().x < 1000){
 //                continue;
@@ -384,13 +371,16 @@ public class DocumentManager {
             word.getPosition().originalY = word.getPosition().y;
             while(checkForOverlap(placedWords, word)){
                 fixOverlaps(word, i++);
-                calculateBoundingBoxes();
+                word.calculateBoundingBox(maximumWordRelevance);
+//                calculateBoundingBoxes();
             }
             //if (word.getTerm().equals("impression") || word.getTerm().equals("mother")) {
 //                Log.d("Ringcheck", word.getTerm() + " Word placed at: " + word.getPosition().x + ", " +word.getPosition().y  + " " + checkForOverlap(placedWords, word));
             //           }
             placedWords.add(word);
         }
+        Log.d("RadCloud Collision", "resolving took " + (System.currentTimeMillis() - startTime)/1000 + " seconds");
+        Thread.dumpStack();
     }
 
     private void fixOverlaps(Word word, int i){
