@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final DocumentManager dm = DocumentManager.getInstance();
+        long time = System.currentTimeMillis();
 
 //        dm.readDocument(this, R.raw.test, "Chapter 1");
 //        dm.readDocument(this, R.raw.test2, "Chapter 2");
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         dm.readDocument(this, R.raw.wdqk4, "Chapter 4");
         dm.readDocument(this, R.raw.wdqk5, "Chapter 5");
 
+        long time2 = System.currentTimeMillis();
+        Log.d("Performance", "loading documents took " + ((time2 - time)) + " ms");
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override

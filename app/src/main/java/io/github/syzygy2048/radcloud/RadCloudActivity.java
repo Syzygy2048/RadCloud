@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -28,9 +29,9 @@ public class RadCloudActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_rad_cloud);
+        long time = System.currentTimeMillis();
 
-
-        radCloudView = (ImageView) findViewById(R.id.radCloud);
+        radCloudView = findViewById(R.id.radCloud);
         ArrayList<Integer> colors = new ArrayList<>();
         HashMap<String, Integer> categoryColorCodes = new HashMap<>();
         colors.add(Color.argb(255, 0, 0, 255));
@@ -213,7 +214,13 @@ public class RadCloudActivity extends AppCompatActivity {
             oldOffset = offset;
         }
 
-        radCloudView.setImageBitmap(bm);
+        for (Word word : dm.getWordList()) {
+            DocumentManager.Vec2 pos = word.getPosition();
+            canvas.drawLine(pos.originalX, pos.originalY, pos.x, pos.y, spiralLinePaint);
+        }
 
+        radCloudView.setImageBitmap(bm);
+        long time2 = System.currentTimeMillis();
+        Log.d("Performance", "drawing took " + ((time2 - time)) + " ms");
     }
 }
