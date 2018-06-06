@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,28 +22,6 @@ public class DocumentManager {
     private ArrayList<Word> wordList = new ArrayList<>();
     private Ellipse frame = new Ellipse();
 
-    ArrayList<Vec2> positionList = new ArrayList<>
-            (
-                    Arrays.asList(
-                            (new Vec2(10, 0)),
-                            (new Vec2(9, 4)),
-                            (new Vec2(7, 7)),
-                            (new Vec2(4, 9)),
-                            (new Vec2(0, 10)),
-                            (new Vec2(-4, 9)),
-                            (new Vec2(-7, 7)),
-                            (new Vec2(-9, 4)),
-                            (new Vec2(-10, 0)),
-                            (new Vec2(-9, -4)),
-                            (new Vec2(-7, -7)),
-                            (new Vec2(-4, -9)),
-                            (new Vec2(0, -10)),
-                            (new Vec2(4, -9)),
-                            (new Vec2(7, -7)),
-                            (new Vec2(9, -4))
-                    )
-            );
-
     private static DocumentManager instance;
 
 
@@ -53,7 +30,7 @@ public class DocumentManager {
     private DocumentManager() {
     }
 
-    public class Vec2 {
+    public static class Vec2 {
         float originalX;
         float originalY;
         float x;
@@ -385,8 +362,9 @@ public class DocumentManager {
 
     private void fixOverlaps(Word word, int i){
  //TODO: consider calculating positionList rather than using a hard coded version to get tighter results - current version arranges code along 16 axes rather than wherever it fits.
-        word.getPosition().x = word.getPosition().originalX + positionList.get(i%positionList.size()).x * (int)(Math.floor(i/positionList.size()) + 1);
-        word.getPosition().y = word.getPosition().originalY + positionList.get(i%positionList.size()).y * (int)(Math.floor(i/positionList.size()) + 1);
+        Vec2 offset = SpiralUtil.calculateSpiral(i);
+        word.getPosition().x = word.getPosition().originalX + offset.x;
+        word.getPosition().y = word.getPosition().originalY + offset.y;
 //        Log.d("Rad fixOverlap", word.getTerm() + " " + word.getPosition().x + " " + word.getPosition().y);
     }
 

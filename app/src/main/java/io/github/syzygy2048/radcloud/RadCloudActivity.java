@@ -172,7 +172,7 @@ public class RadCloudActivity extends AppCompatActivity {
             }
             textPaint.setColor(textColor);
             //TODO: eliminate magic numbers, also pay attention for barchart
-            String term = "l:" + word.getPosition().boundingBox.left + ",r:" + word.getPosition().boundingBox.right + ",b:" + word.getPosition().boundingBox.bottom + ",t:" +word.getPosition().boundingBox.top;
+            String term = "l:" + word.getPosition().boundingBox.left + ",r:" + word.getPosition().boundingBox.right + ",b:" + word.getPosition().boundingBox.bottom + ",t:" + word.getPosition().boundingBox.top;
             textWidth = textPaint.measureText(word.getTerm());
             canvas.drawText(word.getTerm(), word.getPosition().x - textWidth / 2, word.getPosition().y + textSize / 2, textPaint);
             Random rnd = new Random();
@@ -201,6 +201,17 @@ public class RadCloudActivity extends AppCompatActivity {
 //            canvas.drawLine(0, i, 2700, i, linePaint);
 //            canvas.drawLine(i, 0 , i, 2700, linePaint);
 //        }
+
+        Paint spiralPaint = new Paint();
+        Paint spiralLinePaint = new Paint();
+        spiralPaint.setStrokeWidth(5);
+        DocumentManager.Vec2 oldOffset = new DocumentManager.Vec2(0,0);
+        for (int i = 0; i <= 500; i++){
+            DocumentManager.Vec2 offset = SpiralUtil.calculateSpiral(i);
+            canvas.drawPoint(1280 + offset.x, 770 + offset.y, spiralPaint);
+            canvas.drawLine(1280 + oldOffset.x, 770 + oldOffset.y, 1280 + offset.x, 770 + offset.y, spiralLinePaint);
+            oldOffset = offset;
+        }
 
         radCloudView.setImageBitmap(bm);
 

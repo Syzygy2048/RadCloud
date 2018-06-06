@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
 //        dm.readDocument(this, R.raw.test3, "Chapter 3");
 //        dm.readDocument(this, R.raw.test4, "Chapter 4");
 //        dm.readDocument(this, R.raw.test5, "Chapter 5");
-//        dm.readDocument(this, R.raw.test5, "fifth document");
 
         dm.readDocument(this, R.raw.wdqk1, "Chapter 1");
         dm.readDocument(this, R.raw.wdqk2, "Chapter 2");
