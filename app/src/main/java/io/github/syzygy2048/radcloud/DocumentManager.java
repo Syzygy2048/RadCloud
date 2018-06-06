@@ -352,7 +352,8 @@ public class DocumentManager {
             } else {
                 for (int i = 0; i < circleSorted.size(); i++) {
                     Word sortedWord = circleSorted.get(i);
-                    if (Math.abs(1280 - sortedWord.getPosition().x) + Math.abs(770 - sortedWord.getPosition().y) > Math.abs(1280 - word.getPosition().x) + Math.abs(770 - word.getPosition().y)) {
+//                    if (Math.abs(1280 - sortedWord.getPosition().x) + Math.abs(770 - sortedWord.getPosition().y) > Math.abs(1280 - word.getPosition().x) + Math.abs(770 - word.getPosition().y)) {
+                    if(word.getMaximumRelevance() > sortedWord.getMaximumRelevance()) {
                         circleSorted.add(i, word);
                         break;
                     }
