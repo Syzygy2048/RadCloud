@@ -6,6 +6,8 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -214,9 +216,15 @@ public class DocumentManager {
 
 
     public void readDocument(Context ctx, int resourceId, String documentName) {
-        InputStream inputStream = ctx.getResources().openRawResource(resourceId);
+        processInputFile(ctx.getResources().openRawResource(resourceId), documentName);
+    }
+
+    public void readDocument(String path, String documentName) throws FileNotFoundException {
+        processInputFile(new FileInputStream(path), documentName);
+    }
 
 
+    private void processInputFile(InputStream inputStream, String documentName) {
         try {
             BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
             String x = "";
