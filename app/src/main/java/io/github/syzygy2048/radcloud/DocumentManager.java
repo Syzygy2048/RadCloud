@@ -177,8 +177,8 @@ public class DocumentManager {
         wordList.clear();
         for (String document : selectedWords.keySet()) {
             int i = 0;
-            while (i++ < 100 && i < selectedWords.get(document).size()) {
-                Word selectedWord = selectedWords.get(document).get(i);
+            while (i < 100 && i < selectedWords.get(document).size()) {
+                Word selectedWord = selectedWords.get(document).get(i++);
                 if (selectedWord != null && !wordList.contains(selectedWord)) {
                     wordList.add(selectedWord);
                 }
@@ -382,51 +382,51 @@ public class DocumentManager {
                 fixOverlaps(word, i++);
                 word.calculateBoundingBox(maximumWordRelevance);
             }
-            //shrink
-            float offsetX = word.getPosition().x - word.getPosition().originalX;
-            float offsetY = word.getPosition().y - word.getPosition().originalY;
-            if (offsetX != 0 && offsetY != 0) {
-                for (i = 10; i >= 0; i--) {
-
-////                shrink direct
+//            //shrink
+//            float offsetX = word.getPosition().x - word.getPosition().originalX;
+//            float offsetY = word.getPosition().y - word.getPosition().originalY;
+//            if (offsetX != 0 && offsetY != 0) {
+//                for (i = 10; i >= 0; i--) {
+//
+//////                shrink direct
+////                    if (checkForOverlap(placedWords, word)) {
+////                        word.getPosition().x += 2 * Math.signum(offsetX);
+////                        word.getPosition().y += 2 * Math.signum(offsetY);
+//////                    word.getPosition().x += (word.getPosition().x - word.getPosition().originalX) / 2;
+//////                    word.getPosition().y += (word.getPosition().y - word.getPosition().originalY) / 2;
+////                    } else {
+////                        word.getPosition().x -= 2 * Math.signum(offsetX);
+////                        word.getPosition().y -= 2 * Math.signum(offsetY);
+//////                    word.getPosition().x -= (word.getPosition().x - word.getPosition().originalX) / 2;
+//////                    word.getPosition().y -= (word.getPosition().y - word.getPosition().originalY) / 2;
+////                    }
+////                    word.calculateBoundingBox(maximumWordRelevance);
+//
+////                shrink step
 //                    if (checkForOverlap(placedWords, word)) {
-//                        word.getPosition().x += 2 * Math.signum(offsetX);
-//                        word.getPosition().y += 2 * Math.signum(offsetY);
+//                        word.getPosition().x += 5 * Math.signum(word.getPosition().x - word.getPosition().originalX);
 ////                    word.getPosition().x += (word.getPosition().x - word.getPosition().originalX) / 2;
+//                    } else {
+//                        word.getPosition().x -= 5 * Math.signum(word.getPosition().x - word.getPosition().originalX);
+////                    word.getPosition().x -= (word.getPosition().x - word.getPosition().originalX) / 2;
+//                    }
+//                    word.calculateBoundingBox(maximumWordRelevance);
+//                    if (checkForOverlap(placedWords, word)) {
+//                        word.getPosition().y += 5 * Math.signum(word.getPosition().y - word.getPosition().originalY);
 ////                    word.getPosition().y += (word.getPosition().y - word.getPosition().originalY) / 2;
 //                    } else {
-//                        word.getPosition().x -= 2 * Math.signum(offsetX);
-//                        word.getPosition().y -= 2 * Math.signum(offsetY);
-////                    word.getPosition().x -= (word.getPosition().x - word.getPosition().originalX) / 2;
+//                        word.getPosition().y -= 5 * Math.signum(word.getPosition().y - word.getPosition().originalY);
 ////                    word.getPosition().y -= (word.getPosition().y - word.getPosition().originalY) / 2;
 //                    }
 //                    word.calculateBoundingBox(maximumWordRelevance);
-
-//                shrink step
-                    if (checkForOverlap(placedWords, word)) {
-                        word.getPosition().x += 5 * Math.signum(word.getPosition().x - word.getPosition().originalX);
-//                    word.getPosition().x += (word.getPosition().x - word.getPosition().originalX) / 2;
-                    } else {
-                        word.getPosition().x -= 5 * Math.signum(word.getPosition().x - word.getPosition().originalX);
-//                    word.getPosition().x -= (word.getPosition().x - word.getPosition().originalX) / 2;
-                    }
-                    word.calculateBoundingBox(maximumWordRelevance);
-                    if (checkForOverlap(placedWords, word)) {
-                        word.getPosition().y += 5 * Math.signum(word.getPosition().y - word.getPosition().originalY);
-//                    word.getPosition().y += (word.getPosition().y - word.getPosition().originalY) / 2;
-                    } else {
-                        word.getPosition().y -= 5 * Math.signum(word.getPosition().y - word.getPosition().originalY);
-//                    word.getPosition().y -= (word.getPosition().y - word.getPosition().originalY) / 2;
-                    }
-                    word.calculateBoundingBox(maximumWordRelevance);
-                }
-                if (checkForOverlap(placedWords, word)) {
-                    word.getPosition().x = word.getPosition().originalX + offsetX;
-                    word.getPosition().y = word.getPosition().originalY + offsetY;
-                }
-                word.calculateBoundingBox(maximumWordRelevance);
-            }
-
+//                }
+//                if (checkForOverlap(placedWords, word)) {
+//                    word.getPosition().x = word.getPosition().originalX + offsetX;
+//                    word.getPosition().y = word.getPosition().originalY + offsetY;
+//                }
+//                word.calculateBoundingBox(maximumWordRelevance);
+//            }
+//
             placedWords.add(word);
         }
     }

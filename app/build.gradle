@@ -39,4 +39,5 @@ dependencies {
     implementation 'jp.kai:forcelayout:1.0.9'
 
     compile 'com.nbsp:library:1.8'
+    compile 'com.jsibbold:zoomage:1.1.0'
 }

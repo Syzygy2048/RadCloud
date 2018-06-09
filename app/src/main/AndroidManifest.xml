@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.syzygy2048.radcloud">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,7 +22,9 @@
             android:name=".RadCloudActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_rad_cloud"
-            android:theme="@style/Theme.Design.NoActionBar"></activity>
+            android:theme="@style/Theme.Design.NoActionBar" />
+        <activity android:name=".LoadinScreenActivity" />
+        <activity android:name=".LoadingScreenActivity"></activity>
     </application>
 
 </manifest>

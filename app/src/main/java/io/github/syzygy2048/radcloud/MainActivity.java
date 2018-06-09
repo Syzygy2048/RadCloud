@@ -10,20 +10,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    Button openResButton, openResButton2;
-    TextView resTextPath, resTextPath2;
+    Button openResButton0, openResButton1, openResButton2, openResButton3, openResButton4, openResButton5;
+    ArrayList<EditText> resourceTexts = new ArrayList<>();
     final DocumentManager dm = DocumentManager.getInstance();
 
     @Override
@@ -32,23 +34,46 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //++++++++++++++++++++++++++++
+
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1001);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1100);
         }
 
-        openResButton = (Button) findViewById(R.id.OpenResButton);
-        openResButton2 = (Button) findViewById(R.id.OpenResButton2);
-        resTextPath = (TextView) findViewById(R.id.ResPath);
-        resTextPath2 = (TextView) findViewById(R.id.ResPath2);
 
-        openResButton.setOnClickListener(new View.OnClickListener() {
+        openResButton0 = (Button) findViewById(R.id.OpenResButton0);
+        openResButton1 = (Button) findViewById(R.id.OpenResButton1);
+        openResButton2 = (Button) findViewById(R.id.OpenResButton2);
+        openResButton3 = (Button) findViewById(R.id.OpenResButton3);
+        openResButton4 = (Button) findViewById(R.id.OpenResButton4);
+        openResButton5 = (Button) findViewById(R.id.OpenResButton5);
+        resourceTexts.add((EditText) findViewById(R.id.ResPath0));
+        resourceTexts.add((EditText) findViewById(R.id.ResPath1));
+        resourceTexts.add((EditText) findViewById(R.id.ResPath2));
+        resourceTexts.add((EditText) findViewById(R.id.ResPath3));
+        resourceTexts.add((EditText) findViewById(R.id.ResPath4));
+        resourceTexts.add((EditText) findViewById(R.id.ResPath5));
+
+        openResButton0.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 new MaterialFilePicker()
                         .withActivity(MainActivity.this)
                         .withRequestCode(1000)
-                        //.withFilter(Pattern.compile(".*\\.txt$")) // Filtering files and directories by file name using regexp
+                        .withFilter(Pattern.compile(".*\\.txt$")) // Filtering files and directories by file name using regexp
+//                        .withFilterDirectories(false) // Set directories filterable (false by default)
+                        .withHiddenFiles(true) // Show hidden files and folders
+                        .start();
+            }
+        });
+        openResButton1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new MaterialFilePicker()
+                        .withActivity(MainActivity.this)
+                        .withRequestCode(1001)
+                        .withFilter(Pattern.compile(".*\\.txt$")) // Filtering files and directories by file name using regexp
 //                        .withFilterDirectories(false) // Set directories filterable (false by default)
                         .withHiddenFiles(true) // Show hidden files and folders
                         .start();
@@ -60,8 +85,47 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new MaterialFilePicker()
                         .withActivity(MainActivity.this)
-                        .withRequestCode(2000)
-                        //.withFilter(Pattern.compile(".*\\.txt$")) // Filtering files and directories by file name using regexp
+                        .withRequestCode(1002)
+                        .withFilter(Pattern.compile(".*\\.txt$")) // Filtering files and directories by file name using regexp
+//                        .withFilterDirectories(false) // Set directories filterable (false by default)
+                        .withHiddenFiles(true) // Show hidden files and folders
+                        .start();
+            }
+        });
+        openResButton3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new MaterialFilePicker()
+                        .withActivity(MainActivity.this)
+                        .withRequestCode(1003)
+                        .withFilter(Pattern.compile(".*\\.txt$")) // Filtering files and directories by file name using regexp
+//                        .withFilterDirectories(false) // Set directories filterable (false by default)
+                        .withHiddenFiles(true) // Show hidden files and folders
+                        .start();
+            }
+        });
+        openResButton4.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new MaterialFilePicker()
+                        .withActivity(MainActivity.this)
+                        .withRequestCode(1004)
+                        .withFilter(Pattern.compile(".*\\.txt$")) // Filtering files and directories by file name using regexp
+//                        .withFilterDirectories(false) // Set directories filterable (false by default)
+                        .withHiddenFiles(true) // Show hidden files and folders
+                        .start();
+            }
+        });
+        openResButton5.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new MaterialFilePicker()
+                        .withActivity(MainActivity.this)
+                        .withRequestCode(1005)
+                        .withFilter(Pattern.compile(".*\\.txt$")) // Filtering files and directories by file name using regexp
 //                        .withFilterDirectories(false) // Set directories filterable (false by default)
                         .withHiddenFiles(true) // Show hidden files and folders
                         .start();
@@ -69,20 +133,8 @@ public class MainActivity extends AppCompatActivity {
         });
         //++++++++++++++++++++++++++++
         //TODO: use chosen files xor default + readDocument if new Activity requested + nothing rendered if only two files used
-
-        long time = System.currentTimeMillis();
-
-//        dm.readDocument(this, R.raw.test, "Chapter 1");
-//        dm.readDocument(this, R.raw.test2, "Chapter 2");
-//        dm.readDocument(this, R.raw.test3, "Chapter 3");
-//        dm.readDocument(this, R.raw.test4, "Chapter 4");
-//        dm.readDocument(this, R.raw.test5, "Chapter 5");
-
 //        dm.readDocument(this, R.raw.wdqk1, "Chapter 1");
-//        dm.readDocument(this, R.raw.wdqk2, "Chapter 2");
-//        dm.readDocument(this, R.raw.wdqk3, "Chapter 3");
-//        dm.readDocument(this, R.raw.wdqk4, "Chapter 4");
-//        dm.readDocument(this, R.raw.wdqk5, "Chapter 5");
+        long time = System.currentTimeMillis();
 
         long time2 = System.currentTimeMillis();
         Log.d("Performance", "loading documents took " + ((time2 - time)) + " ms");
@@ -90,8 +142,39 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dm.process();
-                startActivity(new Intent(MainActivity.this, RadCloudActivity.class));
+                //read documents
+                ArrayList<String> files = new ArrayList<>();
+                for (EditText et : resourceTexts) {
+                    String currentFile = et.getText().toString();
+                    if (!currentFile.isEmpty() && currentFile.compareTo("Path to source") != 0) {
+                        files.add(currentFile);
+                    }
+                }
+                if (files.size() > 1) {
+                    for (String s : files) {
+                        String name = s.substring(s.lastIndexOf('/') + 1);
+                        name = name.substring(0, name.lastIndexOf('.'));
+                        try {
+                            dm.readDocument(s, name);
+                        } catch (FileNotFoundException e) {
+                            Log.e("Error", "Document read error");
+                        }
+                    }
+                } else {
+//                            dm.readDocument(getBaseContext(), R.raw.test, "Chapter 1");
+//                            dm.readDocument(getBaseContext(), R.raw.test2, "Chapter 2");
+                    //        dm.readDocument(this, R.raw.test3, "Chapter 3");
+                    //        dm.readDocument(this, R.raw.test4, "Chapter 4");
+//                            dm.readDocument(this, R.raw.test5, "Chapter 5");
+
+                            dm.readDocument(getBaseContext(), R.raw.wdqk1, "Chapter 1");
+                            dm.readDocument(getBaseContext(), R.raw.wdqk2, "Chapter 2");
+                            dm.readDocument(getBaseContext(), R.raw.wdqk3, "Chapter 3");
+//                            dm.readDocument(this, R.raw.wdqk4, "Chapter 4");
+                    //        dm.readDocument(this, R.raw.wdqk5, "Chapter 5");
+                }
+
+                startActivity(new Intent(MainActivity.this, LoadingScreenActivity.class));
                 Log.d("RadCloud","started");
             }
         });
@@ -101,30 +184,38 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String filePath;
-        try {
-        if (requestCode == 1000 && resultCode == RESULT_OK) {
-            filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-            // Do anything with file
-            resTextPath.setText(filePath);
-
-            dm.readDocument(filePath, "Test1");
-
-        }
-        if (requestCode == 2000 && resultCode == RESULT_OK) {
-            filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-            // Do anything with file
-            resTextPath2.setText(filePath);
-            dm.readDocument(filePath, "Test2");
-        }
-        } catch (FileNotFoundException e) {
-            Log.e("Error", "File not found " + '\n' + e);
-        }
+            if (resultCode == RESULT_OK) {
+                if (requestCode == 1000) {
+                    filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                    resourceTexts.get(0).setText(filePath);
+                }
+                else if (requestCode == 1001) {
+                    filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                    resourceTexts.get(1).setText(filePath);
+                }
+                else if (requestCode == 1002) {
+                    filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                    resourceTexts.get(2).setText(filePath);
+                }
+                else if (requestCode == 1003) {
+                    filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                    resourceTexts.get(3).setText(filePath);
+                }
+                else if (requestCode == 1004) {
+                    filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                    resourceTexts.get(4).setText(filePath);
+                }
+                else if (requestCode == 1005) {
+                    filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                    resourceTexts.get(5).setText(filePath);
+                }
+            }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case 1001: {
+            case 1100: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
                 } else  {

@@ -9,11 +9,11 @@ public class SpiralUtil {
     final static double thetaMax = numberOfSpirals * 2 * Math.PI;
 
     //distance from center to outside
-    final static int radius = 700;
+    final static int radius = 2000;
     final static double awayStep = radius / thetaMax;
 
     //point density, less is more
-    final static double chord = 10;
+    final static double chord = 30;
 
 
     final static double theta = chord / awayStep;

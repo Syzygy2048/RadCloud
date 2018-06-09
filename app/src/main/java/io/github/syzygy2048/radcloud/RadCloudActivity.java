@@ -22,7 +22,7 @@ import java.util.Random;
 public class RadCloudActivity extends AppCompatActivity {
     private ImageView radCloudView;
 
-    public static final int MAXIMUM_TEXT_SIZE = 150;
+    public static final int MAXIMUM_TEXT_SIZE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class RadCloudActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rad_cloud);
         long time = System.currentTimeMillis();
 
-        radCloudView = findViewById(R.id.radCloud);
+        radCloudView = findViewById(R.id.myZoomageView);
         ArrayList<Integer> colors = new ArrayList<>();
         HashMap<String, Integer> categoryColorCodes = new HashMap<>();
         colors.add(Color.argb(255, 0, 0, 255));
@@ -138,8 +138,9 @@ public class RadCloudActivity extends AppCompatActivity {
             float maximumRelevance = word.getMaximumRelevance();
 //            canvas.drawLine(1280, 770, word.getPosition().x, word.getPosition().y, ovalPaint);
             float textSize = MAXIMUM_TEXT_SIZE * (maximumRelevance / maximumWordRelevance);
-            if (textSize < 5.0) {
-                textSize = 5;
+            Log.d("Size", String.valueOf(textSize));
+            if (textSize < 30.0) {
+                textSize = 30;
             }
             textPaint.setTextSize(textSize);
             Integer textColor = Color.argb(255, 0, 0, 0);

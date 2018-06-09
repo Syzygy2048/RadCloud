@@ -117,8 +117,8 @@ public class Word {
 
     public void calculateBoundingBox(Paint paint, float maximumWordRelevance) {
         float textSize = RadCloudActivity.MAXIMUM_TEXT_SIZE * (getMaximumRelevance() / maximumWordRelevance);
-        if (textSize < 5.0) {
-            textSize = 5;
+        if (textSize < 30.0) {
+            textSize = 30;
         }
         paint.setTextSize(textSize);
         float textWidth = paint.measureText(getTerm());
