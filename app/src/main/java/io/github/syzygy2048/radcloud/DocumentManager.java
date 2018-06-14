@@ -227,7 +227,7 @@ public class DocumentManager {
      * If a word appears in several documents, it is only added once reducing the total number.
      */
     private void selectTopWordsPerDocument() {
-        int numberOfWords = 50;
+        int numberOfWords = 90;
         Map<String, LinkedList<Word>> selectedWords = new HashMap<>();
         for (String document : documentList.keySet()) {
             selectedWords.put(document, new LinkedList<Word>());
