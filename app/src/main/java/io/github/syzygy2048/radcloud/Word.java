@@ -8,7 +8,6 @@ import java.util.HashMap;
 /**
  * Created by rebeb on 5/8/2018.
  */
-
 public class Word {
 
     private String term;

@@ -432,7 +432,7 @@ public class DocumentManager {
     }
 
     private void fixOverlaps(Word word, int i) {
-        Vec2 offset = SpiralUtil.calculateSpiral(i);
+        Vec2 offset = SpiralGenerator.calculateSpiral(i);
         word.getPosition().x = word.getPosition().originalX + offset.x;
         word.getPosition().y = word.getPosition().originalY + offset.y;
 //        Log.d("Rad fixOverlap", word.getTerm() + " " + word.getPosition().x + " " + word.getPosition().y);

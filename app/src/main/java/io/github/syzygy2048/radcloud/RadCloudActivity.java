@@ -16,14 +16,21 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Fullscreen activity used to render the RadCloud.
  */
 public class RadCloudActivity extends AppCompatActivity {
     private ImageView radCloudView;
 
+    /**
+     * The maximum size a text can have.
+     */
     public static final int MAXIMUM_TEXT_SIZE = 200;
 
+
+    /**
+     * Draws the RadCloud and displays it on screen.
+     * @param savedInstanceState - default android behavior
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,7 +216,7 @@ public class RadCloudActivity extends AppCompatActivity {
         spiralPaint.setStrokeWidth(5);
         DocumentManager.Vec2 oldOffset = new DocumentManager.Vec2(0,0);
         for (int i = 0; i <= 500; i++){
-            DocumentManager.Vec2 offset = SpiralUtil.calculateSpiral(i);
+            DocumentManager.Vec2 offset = SpiralGenerator.calculateSpiral(i);
             canvas.drawPoint(200 + offset.x, 100 + offset.y, spiralPaint);
             canvas.drawLine(200 + oldOffset.x, 100 + oldOffset.y, 200 + offset.x, 100 + offset.y, spiralLinePaint);
             oldOffset = offset;
