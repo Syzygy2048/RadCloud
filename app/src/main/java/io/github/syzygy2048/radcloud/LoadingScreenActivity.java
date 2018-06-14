@@ -8,8 +8,15 @@ import android.os.Bundle;
 import android.view.View;
 
 public class LoadingScreenActivity extends AppCompatActivity {
-
+    /**
+     * Delay on opening the new activity
+     */
     private final int WAIT_TIME = 2500;
+
+    /**
+     * Waits until new activity is loaded already
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
