@@ -13,7 +13,6 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  * Fullscreen activity used to render the RadCloud.
@@ -184,9 +183,9 @@ public class RadCloudActivity extends AppCompatActivity {
             String term = "l:" + word.getPosition().boundingBox.left + ",r:" + word.getPosition().boundingBox.right + ",b:" + word.getPosition().boundingBox.bottom + ",t:" + word.getPosition().boundingBox.top;
             textWidth = textPaint.measureText(word.getTerm());
             canvas.drawText(word.getTerm(), word.getPosition().x - textWidth / 2, word.getPosition().y + textSize / 2, textPaint);
-            Random rnd = new Random();
-            textPaint.setColor(Color.argb(100, rnd.nextInt(100), rnd.nextInt(100), rnd.nextInt(100)));
-            canvas.drawRect(word.getPosition().boundingBox, textPaint);
+//            Random rnd = new Random();
+//            textPaint.setColor(Color.argb(100, rnd.nextInt(100), rnd.nextInt(100), rnd.nextInt(100)));
+//            canvas.drawRect(word.getPosition().boundingBox, textPaint);
 
 
             //TODO: is this the right relevance measure?
@@ -211,21 +210,21 @@ public class RadCloudActivity extends AppCompatActivity {
 //            canvas.drawLine(i, 0 , i, 2700, linePaint);
 //        }
 
-        Paint spiralPaint = new Paint();
-        Paint spiralLinePaint = new Paint();
-        spiralPaint.setStrokeWidth(5);
-        DocumentManager.Vec2 oldOffset = new DocumentManager.Vec2(0,0);
-        for (int i = 0; i <= 500; i++){
-            DocumentManager.Vec2 offset = SpiralGenerator.calculateSpiral(i);
-            canvas.drawPoint(200 + offset.x, 100 + offset.y, spiralPaint);
-            canvas.drawLine(200 + oldOffset.x, 100 + oldOffset.y, 200 + offset.x, 100 + offset.y, spiralLinePaint);
-            oldOffset = offset;
-        }
+//        Paint spiralPaint = new Paint();
+//        Paint spiralLinePaint = new Paint();
+//        spiralPaint.setStrokeWidth(5);
+//        DocumentManager.Vec2 oldOffset = new DocumentManager.Vec2(0,0);
+//        for (int i = 0; i <= 500; i++){
+//            DocumentManager.Vec2 offset = SpiralGenerator.calculateSpiral(i);
+//            canvas.drawPoint(200 + offset.x, 100 + offset.y, spiralPaint);
+//            canvas.drawLine(200 + oldOffset.x, 100 + oldOffset.y, 200 + offset.x, 100 + offset.y, spiralLinePaint);
+//            oldOffset = offset;
+//        }
 
-        for (Word word : dm.getWordList()) {
-            DocumentManager.Vec2 pos = word.getPosition();
-            canvas.drawLine(pos.originalX, pos.originalY, pos.x, pos.y, spiralLinePaint);
-        }
+//        for (Word word : dm.getWordList()) {
+//            DocumentManager.Vec2 pos = word.getPosition();
+//            canvas.drawLine(pos.originalX, pos.originalY, pos.x, pos.y, spiralLinePaint);
+//        }
 
         radCloudView.setImageBitmap(bm);
         long time2 = System.currentTimeMillis();

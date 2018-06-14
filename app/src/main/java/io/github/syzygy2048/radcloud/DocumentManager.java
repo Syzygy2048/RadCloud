@@ -196,7 +196,7 @@ public class DocumentManager {
 
 
         Log.d("Word Filter Performance", "word count before " + wordList.size());
-        selectTop100WordsPerDocument();
+        selectTopWordsPerDocument();
         Log.d("Word Filter Performance", "word count after " + wordList.size());
         time2 = System.currentTimeMillis();
         Log.d("Performance", "selecting top 100 per category took " + ((time2 - time)) + " ms");
@@ -223,10 +223,11 @@ public class DocumentManager {
     }
 
     /**
-     * Selects the top 100 words in each document.
+     * Selects the top words in each document.
      * If a word appears in several documents, it is only added once reducing the total number.
      */
-    private void selectTop100WordsPerDocument() {
+    private void selectTopWordsPerDocument() {
+        int numberOfWords = 50;
         Map<String, LinkedList<Word>> selectedWords = new HashMap<>();
         for (String document : documentList.keySet()) {
             selectedWords.put(document, new LinkedList<Word>());
@@ -238,7 +239,7 @@ public class DocumentManager {
                 Integer countInDocument = word.getWordCount().get(document);
                 if (countInDocument != null && countInDocument > 0) {
                     LinkedList<Word> list = selectedWords.get(document);
-                    for (int i = 0; i < 100; i++) {
+                    for (int i = 0; i < numberOfWords; i++) {
                         if (list.size() == i || list.get(i).getWordCount().get(document) < word.getWordCount().get(document)) {
                             list.add(i, word);
                             break;
@@ -457,7 +458,8 @@ public class DocumentManager {
     }
 
     /**
-     * resolves overlaps
+     * resolves overlaps based on paper:
+     * "Rolled-out Wordles: A heuristic Method for Overlap Removal of 2D Data Representatives." Strobelt, Hendrik, et al.
      */
     public void resolveOverlaps() {
         LinkedList<Word> circleSorted = new LinkedList<>(); //sorted by distance to center

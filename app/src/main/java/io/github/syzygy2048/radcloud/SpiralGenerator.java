@@ -3,7 +3,7 @@ package io.github.syzygy2048.radcloud;
 
 /**
  * This class is used to equidistant points on a spiral.
- * Source: https://stackoverflow.com/questions/13894715/draw-equidistant-points-on-a-spiral
+ * Based on: https://stackoverflow.com/questions/13894715/draw-equidistant-points-on-a-spiral
  */
 public class SpiralGenerator {
 
