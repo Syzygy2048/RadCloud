@@ -566,7 +566,6 @@ public class DocumentManager {
      */
     private boolean overlaps(Rect bb1, Rect bb2) {
         ArrayList<Vec2> points = new ArrayList<>();
-        points.add(new Vec2(bb2.left, bb2.top));
         points.add(new Vec2(bb2.left, bb2.bottom));
         points.add(new Vec2(bb2.right, bb2.top));
         points.add(new Vec2(bb2.right, bb2.bottom));

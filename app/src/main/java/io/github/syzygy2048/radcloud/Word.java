@@ -9,33 +9,47 @@ import java.util.HashMap;
  * Created by rebeb on 5/8/2018.
  */
 public class Word {
+
     /**
      * Term
      */
     private String term;
+
     /**
      * Term frequency of word in the documents
      */
     private HashMap<String, Float> termFrequency = new HashMap<>();
+
     /**
      * Number of occurrences in each document
      */
     private HashMap<String, Integer> countByDocument = new HashMap<>();
+
     /**
      * inverse document frequency of the word
      */
     private float inverseDocumentFrequency;
+
     /**
-     *
+     * Normalized weight for each document
      */
     private HashMap<String, Float> normalizedWeights;
+
+    /**
+     * Category weights for each document
+     */
     private HashMap<String, Float> categoryWeights;
+
+    /**
+     * Placement weights for each word.
+     */
     private HashMap<String, Float> placementWeights;
-    private HashMap<String, Float> documentWeights;
+
     /**
      * Original position of word
      */
     private DocumentManager.Vec2 intendedPosition;
+
     /**
      * maximum achieved relevance of the word
      */
@@ -181,18 +195,10 @@ public class Word {
         return normalizedWeights;
     }
 
-    public void setDocumentWeights(HashMap<String, Float> documentWeights) {
-        this.documentWeights = documentWeights;
-    }
-
     /**
-     * getter for document weights
-     * @return
+     * setter for intended position
+     * @param intendedPosition
      */
-    public HashMap<String, Float> getDocumentWeights() {
-        return documentWeights;
-    }
-
     public void setIntendedPosition(DocumentManager.Vec2 intendedPosition) {
         this.intendedPosition = intendedPosition;
     }
