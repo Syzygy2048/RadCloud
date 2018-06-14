@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.nbsp.materialfilepicker.MaterialFilePicker;
@@ -208,11 +209,11 @@ public class MainActivity extends AppCompatActivity {
                     //        dm.readDocument(this, R.raw.test4, "Chapter 4");
 //                            dm.readDocument(this, R.raw.test5, "Chapter 5");
 
-//                    dm.readDocument(getBaseContext(), R.raw.wdqk1, "Chapter 1");
-                    dm.readDocument(getBaseContext(), R.raw.wdqk2, "Chapter 2");
-                    dm.readDocument(getBaseContext(), R.raw.wdqk3, "Chapter 3");
-                    dm.readDocument(getBaseContext(), R.raw.wdqk4, "Chapter 4");
-//                    dm.readDocument(getBaseContext(), R.raw.wdqk5, "Tiger");
+                    dm.readDocument(getBaseContext(), R.raw.wdqk1, "Scottish Fold");
+                    dm.readDocument(getBaseContext(), R.raw.wdqk2, "British Shorthair");
+                    dm.readDocument(getBaseContext(), R.raw.wdqk3, "Domestic Cat ");
+//                            dm.readDocument(this, R.raw.wdqk4, "Chapter 4");
+                    //        dm.readDocument(this, R.raw.wdqk5, "Chapter 5");
                 }
 
                 startActivity(new Intent(MainActivity.this, LoadingScreenActivity.class));
