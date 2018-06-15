@@ -12,6 +12,10 @@ Die Wort Relevanz ist basierend auf der Wort Häufigkeit (tf - term frequency) mu
 Die Anzahl der Wörter für welche, diese Berechnungen durchgeführt werden, ist beschränkt auf 100 Wörter pro Dokument.
 Die Größe der Wörter reflektiert die Relevanz, die Farbe ist interpoliert zwischen den Kategorien wo das Wort vorkommt, weiters zeigt unter jedem Wort eine Barchart die Häufigkeit in den unterschiedlichen Quellen. Weiters wird die Wort Position anhand eines Spiral Layout Algorithmus[2] berechnet. Um Überlappungen zu vermeiden, verschieben sich Wörter welche überlappen um eine möglichst geringe Distanz.
 
+Documentation
+
+https://syzygy2048.github.io/doc/radcloud/doc/html/index.html
+
 Referenzen
 
 [1]Burch, Michael, et al. "RadCloud: Visualizing multiple texts with merged word clouds." Information Visualisation (IV), 2014 18th International Conference on. IEEE, 2014.
