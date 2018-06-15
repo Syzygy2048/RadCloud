@@ -160,6 +160,10 @@ public class Word {
      * @param idf
      */
     public void setInverseDocumentFrequency(float idf) {
+        if (idf == 0){
+            idf = 1;
+        }
+
         this.inverseDocumentFrequency = idf;
     }
 

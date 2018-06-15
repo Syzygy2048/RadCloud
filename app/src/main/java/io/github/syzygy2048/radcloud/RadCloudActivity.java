@@ -223,8 +223,8 @@ public class RadCloudActivity extends AppCompatActivity {
 //        DocumentManager.Vec2 oldOffset = new DocumentManager.Vec2(0,0);
 //        for (int i = 0; i <= 500; i++){
 //            DocumentManager.Vec2 offset = SpiralGenerator.calculateSpiral(i);
-//            canvas.drawPoint(200 + offset.x, 100 + offset.y, spiralPaint);
-//            canvas.drawLine(200 + oldOffset.x, 100 + oldOffset.y, 200 + offset.x, 100 + offset.y, spiralLinePaint);
+//            canvas.drawPoint(1280 + offset.x, 770 + offset.y, spiralPaint);
+//            canvas.drawLine(1280 + oldOffset.x, 770 + oldOffset.y, 1280 + offset.x, 770 + offset.y, spiralLinePaint);
 //            oldOffset = offset;
 //        }
 
