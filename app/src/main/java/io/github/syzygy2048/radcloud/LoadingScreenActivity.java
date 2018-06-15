@@ -25,10 +25,18 @@ public class LoadingScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loading_screen);
         findViewById(R.id.mainSpinner1).setVisibility(View.VISIBLE);
 
+        int idfMethod = 0;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            idfMethod = extras.getInt("idfMethod");
+            //The key argument here must match that used in the other activity
+        }
+        final int chosenIdfMethod = idfMethod;
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                DocumentManager.getInstance().process();
+
+                DocumentManager.getInstance().process(chosenIdfMethod);
 	  /* Create an Intent that will start the ProfileData-Activity. */
                 Intent mainIntent = new Intent(LoadingScreenActivity.this,RadCloudActivity.class);
                 LoadingScreenActivity.this.startActivity(mainIntent);

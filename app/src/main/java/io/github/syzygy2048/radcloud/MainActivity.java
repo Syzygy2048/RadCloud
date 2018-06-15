@@ -9,9 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.nbsp.materialfilepicker.MaterialFilePicker;
@@ -25,13 +28,30 @@ import java.util.regex.Pattern;
 /**
  * Entry point for the App. Let's you select and read documents.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     /**
      * Buttons for file pickers.
      */
     Button openResButton0, openResButton1, openResButton2, openResButton3, openResButton4, openResButton5;
-
+    /**
+     * Reset path if onResume is called
+     */
+    boolean resetText = true;
+    /**
+     * Dropdown menu for idf method
+     */
+    Spinner spinner;
+    /**
+     * Idf methods
+     */
+    static final String spinnerContent[] = {"Normal", "Inverse", "Set 0 to 1"};
+    /**
+     * 0 normal
+     * 1 1-idf
+     * 2 set idf to 1 if it would be 0
+     */
+    int idfMethod;
     /**
      * Collection of EditTexts which are used to display which file is selected.
      */
@@ -54,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //++++++++++++++++++++++++++++
+        dm.clear();
+
+        spinner = (Spinner)findViewById(R.id.spinnerIDFMethod);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                android.R.layout.simple_spinner_item,spinnerContent);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+        idfMethod = 0;
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1100);
@@ -170,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //++++++++++++++++++++++++++++
-        //TODO: use chosen files xor default + readDocument if new Activity requested + nothing rendered if only two files used
 //        dm.readDocument(this, R.raw.wdqk1, "Chapter 1");
         long time = System.currentTimeMillis();
 
@@ -212,16 +241,31 @@ public class MainActivity extends AppCompatActivity {
                     dm.readDocument(getBaseContext(), R.raw.wdqk1, "Scottish Fold");
                     dm.readDocument(getBaseContext(), R.raw.wdqk2, "British Shorthair");
                     dm.readDocument(getBaseContext(), R.raw.wdqk3, "Domestic Cat ");
-//                            dm.readDocument(this, R.raw.wdqk4, "Chapter 4");
+                    dm.readDocument(getBaseContext(), R.raw.wdqk4, "Wildcat");
                     //        dm.readDocument(this, R.raw.wdqk5, "Chapter 5");
                 }
-
-                startActivity(new Intent(MainActivity.this, LoadingScreenActivity.class));
+                Intent loadingScreen = new Intent(MainActivity.this, LoadingScreenActivity.class);
+                loadingScreen.putExtra("idfMethod", idfMethod);
+                startActivity(loadingScreen);
                 Log.d("RadCloud", "started");
             }
         });
     }
 
+    /**
+     * Resume Activity
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dm.clear();
+        for (EditText et: resourceTexts) {
+            if (resetText) {
+                et.setText("Path to source");
+            }
+        }
+        resetText = true;
+    }
 
     /**
      * Results of file pickers.
@@ -255,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
                 resourceTexts.get(5).setText(filePath);
             }
         }
+        resetText = false;
     }
 
 
@@ -278,5 +323,38 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    /**
+     * Sets the idf method
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0:
+                idfMethod = 0;
+                break;
+            case 1:
+                idfMethod = 1;
+                break;
+            case 2:
+                idfMethod = 2;
+                break;
+
+        }
+    }
+
+    /**
+     * Sets the default idf method(normal)
+     * @param parent
+     */
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        spinner.setSelection(0);
+        idfMethod = 0;
     }
 }

@@ -91,21 +91,23 @@ public class DocumentManager {
      */
     public class Ellipse {
         /**
-         * half of the width
+         *  Origin x
          */
         int h = 1280;
         /**
-         * half of the height
+         *  Origin y
          */
         int k = 720;
         /**
-         * Origin x
+         *
+         *  half of the width
          */
-        int a = 1080;
+        int a = 1040;
         /**
-         * Origin y
+         *
+         * half of the height
          */
-        int b = 520;
+        int b = 500;
 
         /**
          * Empty constructor since its parameters are predefined
@@ -128,6 +130,16 @@ public class DocumentManager {
             instance = new DocumentManager();
         }
         return instance;
+    }
+
+    /**
+     * Reset the Document Manager
+     */
+    public void clear() {
+        documentList.clear();
+        documentVectors.clear();
+        wordList.clear();
+        maximumWordRelevance = -1;
     }
 
     /**
@@ -173,11 +185,23 @@ public class DocumentManager {
 
     /**
      * Calculates the inverse document frequency
+     * @param idfMode
+     * idfMode = 0 tf*idf
+     * idfMode = 1 idf = 1 - idf
+     * idfMode = 2 if (idf == 0) > idf = 1
      */
-    private void calculateInverseDocumentFrequency() {
+    private void calculateInverseDocumentFrequency(int idfMode) {
         for (Word word : wordList) {
             HashMap<String, Integer> wordCount = word.getWordCount();
-            word.setInverseDocumentFrequency((float) Math.log(((double) documentList.size()) / ((double) wordCount.size())));
+            float idf = (float) Math.log(((double) documentList.size()) / ((double) wordCount.size()));
+            if (idfMode == 1) {
+                idf = Math.abs(1-idf);
+            } else if (idfMode == 2) {
+                if (idf == 0) {
+                    idf = 1;
+                }
+            }
+            word.setInverseDocumentFrequency(idf);
             System.out.println("Inverse Document Frequency for " + word.getTerm() + " is: " + word.getInverseDocumentFrequency());
         }
     }
@@ -187,7 +211,7 @@ public class DocumentManager {
      * determines original position
      * and resolves overlaps
      */
-    public void process() {
+    public void process(int idfMode) {
         long time = System.currentTimeMillis();
         calculateDocumentVectors();
         long time2 = System.currentTimeMillis();
@@ -207,7 +231,7 @@ public class DocumentManager {
         Log.d("Performance", "calculate tf took " + ((time2 - time)) + " ms");
         time = System.currentTimeMillis();
 
-        calculateInverseDocumentFrequency();
+        calculateInverseDocumentFrequency(idfMode);
         time2 = System.currentTimeMillis();
         Log.d("Performance", "calculate idf took " + ((time2 - time)) + " ms");
         time = System.currentTimeMillis();
@@ -228,6 +252,13 @@ public class DocumentManager {
      */
     private void selectTopWordsPerDocument() {
         int numberOfWords = 50;
+        if (documentList.size() == 4) {
+            numberOfWords = 30;
+        } else if (documentList.size() == 5) {
+            numberOfWords = 25;
+        } else if (documentList.size() == 6) {
+            numberOfWords = 20;
+        }
         Map<String, LinkedList<Word>> selectedWords = new HashMap<>();
         for (String document : documentList.keySet()) {
             selectedWords.put(document, new LinkedList<Word>());
@@ -361,6 +392,7 @@ public class DocumentManager {
                         word = word.replace("!", "");
                         word = word.replace("?", "");
                         word = word.replace("…", " ");
+                        word = word.replace("\uFEFF", "");
 
                         boolean ok = true;
                         for (String stopword : stopwords) {
@@ -370,6 +402,10 @@ public class DocumentManager {
                         }
 
                         if (ok) {
+                            if("the".equals(word)){
+                                Log.d("Word Filter", "failed to filter 'the'");
+                            }
+
                             add(documentName, word);
                         }
                     }

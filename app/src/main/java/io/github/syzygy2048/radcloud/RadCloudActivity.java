@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Fullscreen activity used to render the RadCloud.
@@ -151,10 +152,14 @@ public class RadCloudActivity extends AppCompatActivity {
             textPaint.setTextSize(textSize);
             Integer textColor = Color.argb(255, 0, 0, 0);
             HashMap<String, Float> weights = word.getPlacementWeights();
+            float sumRelevance = 0;
+            for (String doc : weights.keySet()) {
+                sumRelevance += weights.get(doc);
+            }
             for (String document : weights.keySet()) {
-                int r = Math.round((float) Color.red(categoryColorCodes.get(document)) * weights.get(document));
-                int g = Math.round((float) Color.green(categoryColorCodes.get(document)) * weights.get(document));
-                int b = Math.round((float) Color.blue(categoryColorCodes.get(document)) * weights.get(document));
+                int r = Math.round((float) Color.red(categoryColorCodes.get(document)) * (weights.get(document) / sumRelevance));
+                int g = Math.round((float) Color.green(categoryColorCodes.get(document)) * (weights.get(document) / sumRelevance));
+                int b = Math.round((float) Color.blue(categoryColorCodes.get(document)) * (weights.get(document) / sumRelevance));
 
 
                 int oldR = Color.red(textColor);
@@ -183,6 +188,7 @@ public class RadCloudActivity extends AppCompatActivity {
             String term = "l:" + word.getPosition().boundingBox.left + ",r:" + word.getPosition().boundingBox.right + ",b:" + word.getPosition().boundingBox.bottom + ",t:" + word.getPosition().boundingBox.top;
             textWidth = textPaint.measureText(word.getTerm());
             canvas.drawText(word.getTerm(), word.getPosition().x - textWidth / 2, word.getPosition().y + textSize / 2, textPaint);
+            //render boundinboxes
 //            Random rnd = new Random();
 //            textPaint.setColor(Color.argb(100, rnd.nextInt(100), rnd.nextInt(100), rnd.nextInt(100)));
 //            canvas.drawRect(word.getPosition().boundingBox, textPaint);
@@ -193,10 +199,11 @@ public class RadCloudActivity extends AppCompatActivity {
             float barchartX = word.getPosition().x - textWidth / 2;
             float barchartY = word.getPosition().y + 5 + textSize / 2; //offset
             barChartPaint.setStrokeWidth(5);
+
             for (String doc : relevance.keySet()) {
                 //canvas.drawLine(1280, 770, 1280 + 640 * word.getPosition().x, 770 +  385 * word.getPosition().y, ovalPaint);
                 System.out.println("Word: " + word.getTerm() + " Doc: " + doc + " textWidth: " + textWidth + " category weight: " + word.getCategoryWeights().get(doc) + " relevance: " + maximumRelevance);
-                float barWidth = textWidth * relevance.get(doc);
+                float barWidth = textWidth * (relevance.get(doc) / sumRelevance);
                 barChartPaint.setColor(categoryColorCodes.get(doc));
                 canvas.drawLine(barchartX, barchartY, (barchartX + barWidth), barchartY, barChartPaint);
                 barchartX += barWidth;
