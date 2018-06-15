@@ -1,4 +1,4 @@
-﻿package io.github.syzygy2048.radcloud;
+package io.github.syzygy2048.radcloud;
 
 import android.content.Context;
 import android.graphics.Paint;
