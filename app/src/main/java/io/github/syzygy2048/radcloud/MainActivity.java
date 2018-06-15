@@ -264,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 et.setText("Path to source");
             }
         }
+        idfMethod = 0;
         resetText = true;
     }
 
